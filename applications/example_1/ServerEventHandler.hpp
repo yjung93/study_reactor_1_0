@@ -20,6 +20,9 @@ public:
 	virtual ~ServerEventHandler();
 
 	void open();
+
+private:
+	  int handleInput( int fd = INVALID_HANDLE ) override;
 };
 
 } /* namespace example_1 */

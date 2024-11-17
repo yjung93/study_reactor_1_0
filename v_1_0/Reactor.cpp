@@ -96,27 +96,21 @@ int Reactor::handleEvents()
                 maxFd = handle;
             }
 
-            cout << __FUNCTION__
-                 << ": before select"
-                 << "handle="
-                 << handle
-                 << ", maxFd="
-                 << maxFd
-                 << endl;
         }
 
         // Wait for an activity on one of the sockets
         int activity = select( maxFd + 1, &readfds, nullptr, nullptr, nullptr );
-        cout << __FUNCTION__
-             << ": after select"
-             << "activity="
-             << activity
-             << endl;
 
         if ( (activity < 0) && (errno != EINTR) )
         {
             std::cerr << "select error"
                       << std::endl;
+        }else
+        {
+            cout << __FUNCTION__
+                 << ": select, activity="
+                 << activity
+                 << endl;
         }
 
         for ( auto itHandler : mEventHandlerRepository )
@@ -125,7 +119,10 @@ int Reactor::handleEvents()
             {
                 itHandler.second.evHandler->handleInput( itHandler.second.evHandler->getHandle() );
             }
+
         }
+
+        cleanUpRemovedHandler();
 
     }
     return result;
@@ -150,6 +147,7 @@ int Reactor::registerHandler( EventHandler *event_handler, ReactorMask mask )
     if ( mEventHandlerRepository.find( event_handler->getHandle() ) == mEventHandlerRepository.end() )
     {
         EvHandlerInfo evHandlerInfo;
+        evHandlerInfo.valid = true;
         evHandlerInfo.evHandler = event_handler;
         evHandlerInfo.mask = mask;
 
@@ -159,9 +157,65 @@ int Reactor::registerHandler( EventHandler *event_handler, ReactorMask mask )
              << ": handle="
              << event_handler->getHandle()
              << endl;
+    }else
+    {
+        cout << __FUNCTION__
+             << ": handle="
+             << event_handler->getHandle()
+             << " already exist"
+             << endl;
     }
 
     return result;
 }
 
-} /* namespace v_1_0 */
+int Reactor::removeHandler( EventHandler *event_handler )
+{
+    if ( event_handler == nullptr )
+    {
+        return -1;
+    }
+
+    int result = 0;
+
+    if ( mEventHandlerRepository.find( event_handler->getHandle() ) == mEventHandlerRepository.end() )
+    {
+
+        cout << __FUNCTION__
+             << ": handle="
+             << event_handler->getHandle()
+             << "not exist"
+             << endl;
+
+        result = -1;
+    }else
+    {
+        mEventHandlerRepository[event_handler->getHandle()].valid = false;
+
+        cout << __FUNCTION__
+             << ": handle="
+             << event_handler->getHandle()
+             << " set to removed"
+             << endl;
+    }
+
+    return result;
+}
+
+void Reactor::cleanUpRemovedHandler()
+{
+
+    for ( auto itHandler = mEventHandlerRepository.begin(); itHandler != mEventHandlerRepository.end(); )
+    {
+        if ( itHandler->second.valid == false )
+        {
+            delete itHandler->second.evHandler;
+            itHandler = mEventHandlerRepository.erase( itHandler );
+        }else
+        {
+            ++itHandler;
+        }
+    }
+
+}
+}/* namespace v_1_0 */

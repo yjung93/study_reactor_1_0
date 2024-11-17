@@ -86,17 +86,17 @@ int Acceptor::handleInput( int fd )
     cout << __FUNCTION__
          << endl;
 
-    int newSocketFd;
     int addrlen = sizeof(mAddress);
+    int newSocketFd = accept( fd, (struct sockaddr*) &mAddress, (socklen_t*) &(addrlen) );
 
-    if ( (newSocketFd = accept( fd, (struct sockaddr*) &mAddress, (socklen_t*) &(addrlen) ) < 0) )
+    if ( newSocketFd < 0 )
     {
         perror( "accept failed" );
         exit( EXIT_FAILURE );
     }
 
     ServerEventHandler *serverEventHandler = new ServerEventHandler( getReactor() );
-    serverEventHandler->setHandle(newSocketFd);
+    serverEventHandler->setHandle( newSocketFd );
     serverEventHandler->open();
 
     std::cout << "New connection established, socket FD: "

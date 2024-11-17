@@ -22,6 +22,7 @@ public:
 
     struct EvHandlerInfo
     {
+        bool valid = false;
         ReactorMask mask;
         EventHandler *evHandler;
     };
@@ -36,8 +37,13 @@ public:
     int handleEvents();
     int deactivated();
     int registerHandler( EventHandler *event_handler, ReactorMask mask );
+    int removeHandler( EventHandler *event_handler );
+
 
 protected:
+
+    void cleanUpRemovedHandler();
+
     static Reactor *mInstance;
     EventHandlerRepository mEventHandlerRepository;
 
