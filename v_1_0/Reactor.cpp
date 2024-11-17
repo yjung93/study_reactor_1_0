@@ -86,7 +86,7 @@ int Reactor::handleEvents()
         // Add server socket to set
         int maxFd = 0;
 
-        for ( auto itHandler : mEventHandlerRepository )
+        for ( const auto &itHandler : mEventHandlerRepository )
         {
             int handle = itHandler.second.evHandler->getHandle();
             FD_SET( itHandler.second.evHandler->getHandle(), &readfds );
@@ -113,7 +113,7 @@ int Reactor::handleEvents()
                  << endl;
         }
 
-        for ( auto itHandler : mEventHandlerRepository )
+        for ( const auto &itHandler : mEventHandlerRepository )
         {
             if ( FD_ISSET( itHandler.second.evHandler->getHandle(), &readfds ) )
             {
