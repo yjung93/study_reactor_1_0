@@ -9,7 +9,6 @@
 #include <thread>
 
 #include "v_1_0/Reactor.hpp"
-#include "Server.hpp"
 #include "Acceptor.hpp"
 
 using namespace std;

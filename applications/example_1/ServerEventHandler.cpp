@@ -24,7 +24,6 @@ ServerEventHandler::ServerEventHandler( v_1_0::Reactor *reactor ) :
     cout << "ServerEventHandler::"
          << __FUNCTION__
          << endl;
-    // TODO Auto-generated constructor stub
 
 }
 

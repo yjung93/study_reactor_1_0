@@ -13,9 +13,7 @@ set (example_1_client_source
      
 set (example_1_server_source 
      applications/example_1/MainServer.cpp
-     applications/example_1/Server.cpp
      applications/example_1/Acceptor.cpp
-     applications/example_1/SampleEventHandler.cpp
      applications/example_1/ServerEventHandler.cpp )
      
 set (framework_source_v_1_0 
