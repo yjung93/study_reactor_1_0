@@ -48,9 +48,12 @@ int ServerEventHandler::handleInput( int fd )
          << __FUNCTION__
          << endl;
 
-    char buffer[1024] =
+    const int bufferSize = 1024;
+
+    char buffer[bufferSize] =
     { 0 };
-    int valread = read( fd, buffer, 1024 );
+
+    int valread = read( fd, buffer, bufferSize );
     if ( valread == 0 )
     {
         // Client disconnected

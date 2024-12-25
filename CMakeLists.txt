@@ -8,8 +8,7 @@ add_definitions("-Wall -std=c++11")
 include_directories(${CMAKE_SOURCE_DIR})
 
 set (example_1_client_source 
-     applications/example_1/MainClient.cpp 
-     applications/example_1/Client.cpp)
+     applications/example_1/MainClient.cpp )
      
 set (example_1_server_source 
      applications/example_1/MainServer.cpp
