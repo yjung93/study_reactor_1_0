@@ -68,7 +68,13 @@ int ServerEventHandler::handleInput( int fd )
         cout << "Received message: "
              << buffer
              << endl;
-        send( fd, "Message received", strlen( "Message received" ), 0 );
+
+        string messageToSend = "Echo - " + string( buffer );
+        send( fd, messageToSend.c_str(), messageToSend.size(), 0 );
+
+        cout << "Replied message: "
+             << messageToSend
+             << endl;
     }
 
     return 0;
