@@ -19,6 +19,10 @@ set (framework_v_1_0
      framework/v_1_0/EventHandler.cpp 
      framework/v_1_0/Reactor.cpp )
 
+set (framework_v_2_0 
+     framework/v_2_0/EventHandler.cpp 
+     framework/v_2_0/Reactor.cpp )
+     
 add_executable(example_reactor_client
   ${example_1_client_source}
 )
