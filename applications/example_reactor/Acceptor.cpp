@@ -4,16 +4,16 @@
  *  Created on: Jan 23, 2024
  *      Author: yjung93
  */
+#include <applications/example_reactor/Acceptor.hpp>
+#include <applications/example_reactor/ServerEventHandler.hpp>
 #include <arpa/inet.h>
 #include <iostream>
 #include <unistd.h>
 
-#include "Acceptor.hpp"
-#include "ServerEventHandler.hpp"
 
 using namespace std;
 
-namespace example_1
+namespace example_reactor
 {
 
 constexpr int PORT = 8080;
@@ -105,4 +105,4 @@ int Acceptor::handleInput( int fd )
     return 0;
 }
 
-} /* namespace example_1 */
+} /* namespace example_reactor */

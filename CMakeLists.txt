@@ -8,24 +8,23 @@ add_definitions("-Wall -std=c++11")
 include_directories(${CMAKE_SOURCE_DIR})
 
 set (example_1_client_source 
-     applications/example_1/MainClient.cpp )
+     applications/example_reactor/MainClient.cpp )
      
 set (example_1_server_source 
-     applications/example_1/MainServer.cpp
-     applications/example_1/Acceptor.cpp
-     applications/example_1/ServerEventHandler.cpp )
+     applications/example_reactor/MainServer.cpp
+     applications/example_reactor/Acceptor.cpp
+     applications/example_reactor/ServerEventHandler.cpp )
      
-set (framework_source_v_1_0 
-     v_1_0/EventHandler.cpp 
-     v_1_0/Reactor.cpp )
+set (framework_v_1_0 
+     framework/v_1_0/EventHandler.cpp 
+     framework/v_1_0/Reactor.cpp )
 
-add_executable(Example1_Client
+add_executable(example_reactor_client
   ${example_1_client_source}
-  ${framework_source_v_1_0}
 )
 
 
-add_executable(Example1_Server
+add_executable(example_reactor_server
   ${example_1_server_source}
-  ${framework_source_v_1_0}
+  ${framework_v_1_0}
 )

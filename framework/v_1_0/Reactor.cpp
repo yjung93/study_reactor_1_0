@@ -217,5 +217,10 @@ void Reactor::cleanUpRemovedHandler()
         }
     }
 
+    cout << __FUNCTION__
+         << ": Number of registered client = "
+         << mEventHandlerRepository.size()
+         << endl;
+
 }
 }/* namespace v_1_0 */

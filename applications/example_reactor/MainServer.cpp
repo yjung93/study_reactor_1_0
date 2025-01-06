@@ -5,11 +5,11 @@
  *      Author: yjung93
  */
 
+#include <applications/example_reactor/Acceptor.hpp>
 #include <iostream>
 #include <thread>
 
-#include "v_1_0/Reactor.hpp"
-#include "Acceptor.hpp"
+#include "framework/v_1_0/Reactor.hpp"
 
 using namespace std;
 
@@ -25,7 +25,7 @@ int main( int argc, char **argv )
 {
 
     v_1_0::Reactor reactor;
-    example_1::Acceptor acceptor( &reactor );
+    example_reactor::Acceptor acceptor( &reactor );
 
     std::thread serverThread( serverThreadFuncion, &reactor );
 

@@ -5,17 +5,17 @@
  *      Author: yjung93
  */
 
+#include <applications/example_reactor/ServerEventHandler.hpp>
 #include <cstring>
 #include <iostream>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
 
-#include "ServerEventHandler.hpp"
 
 using namespace std;
 
-namespace example_1
+namespace example_reactor
 {
 
 ServerEventHandler::ServerEventHandler( v_1_0::Reactor *reactor ) :
@@ -80,4 +80,4 @@ int ServerEventHandler::handleInput( int fd )
     return 0;
 }
 
-} /* namespace example_1 */
+} /* namespace example_reactor */

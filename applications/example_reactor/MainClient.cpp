@@ -45,33 +45,38 @@ int main()
         char buffer[bufferLength] =
         { 0 };
 
+        std::cout << "Enter Message : ";
         std::getline( std::cin, input );
 
-        if ( input == "exit" )
-        {
-            loop = false;
-        }else
+        if ( input.length() > 0 )
         {
 
-            send( sock, input.c_str(), input.size(), 0 );
-            std::cout << "Sent : "
-                      << input
-                      << std::endl;
-
-            int valRead = read( sock, buffer, bufferLength );
-            if ( valRead == -1 || valRead == 0 )
+            if ( input == "exit" )
             {
-                std::cout << "error : "
-                          << valRead
-                          << std::endl;
                 loop = false;
             }else
             {
-                std::cout << "Received: "
-                          << buffer
-                          << std::endl;
-            }
 
+                send( sock, input.c_str(), input.size(), 0 );
+                std::cout << "Sent : "
+                          << input
+                          << std::endl;
+
+                int valRead = read( sock, buffer, bufferLength );
+                if ( valRead == -1 || valRead == 0 )
+                {
+                    std::cout << "error : "
+                              << valRead
+                              << std::endl;
+                    loop = false;
+                }else
+                {
+                    std::cout << "Received: "
+                              << buffer
+                              << std::endl;
+                }
+
+            }
         }
 
     }

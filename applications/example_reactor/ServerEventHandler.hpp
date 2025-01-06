@@ -8,11 +8,11 @@
 #ifndef APPLICATIONS_EXAMPLE_1_ServerEventHandler_HPP_
 #define APPLICATIONS_EXAMPLE_1_ServerEventHandler_HPP_
 
-#include "v_1_0/EventHandler.hpp"
-#include "v_1_0/Reactor.hpp"
+#include "framework/v_1_0/EventHandler.hpp"
+#include "framework/v_1_0/Reactor.hpp"
 
 
-namespace example_1 {
+namespace example_reactor {
 
 class ServerEventHandler: public v_1_0::EventHandler {
 public:
@@ -25,6 +25,6 @@ private:
 	  int handleInput( int fd = INVALID_HANDLE ) override;
 };
 
-} /* namespace example_1 */
+} /* namespace example_reactor */
 
 #endif /* APPLICATIONS_EXAMPLE_1_ServerEventHandler_HPP_ */

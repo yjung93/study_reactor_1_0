@@ -5,15 +5,15 @@
  *      Author: yjung93
  */
 
-#ifndef APPLICATIONS_EXAMPLE_1_ACCEPTOR_HPP_
-#define APPLICATIONS_EXAMPLE_1_ACCEPTOR_HPP_
+#ifndef APPLICATIONS_EXAMPLE_REACTOR_ACCEPTOR_HPP_
+#define APPLICATIONS_EXAMPLE_REACTOR_ACCEPTOR_HPP_
 
 #include <arpa/inet.h>
 
-#include "v_1_0/EventHandler.hpp"
-#include "v_1_0/Reactor.hpp"
+#include "framework/v_1_0/EventHandler.hpp"
+#include "framework/v_1_0/Reactor.hpp"
 
-namespace example_1
+namespace example_reactor
 {
 
 class Acceptor: public v_1_0::EventHandler
@@ -29,6 +29,6 @@ private:
     struct sockaddr_in mAddress;
 };
 
-} /* namespace example_1 */
+} /* namespace example_reactor */
 
-#endif /* APPLICATIONS_EXAMPLE_1_ACCEPTOR_HPP_ */
+#endif /* APPLICATIONS_EXAMPLE_REACTOR_ACCEPTOR_HPP_ */
