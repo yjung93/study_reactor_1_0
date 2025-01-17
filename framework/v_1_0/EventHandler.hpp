@@ -47,10 +47,6 @@ public:
     virtual ~EventHandler();
 
     virtual int handleInput( int fd = INVALID_HANDLE );
-    virtual int handleOutput( int fd = INVALID_HANDLE );
-    virtual int handleException( int fd = INVALID_HANDLE );
-    virtual int handleClose( int handle );
-    virtual int handleSignal( int signun );
 
     Reactor* getReactor() const;
 

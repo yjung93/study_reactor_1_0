@@ -19,9 +19,12 @@ set (framework_v_1_0
      framework/v_1_0/EventHandler.cpp 
      framework/v_1_0/Reactor.cpp )
 
-set (framework_v_2_0 
-     framework/v_2_0/EventHandler.cpp 
-     framework/v_2_0/Reactor.cpp )
+set (framework_v_1_1 
+     framework/v_1_1/Acceptor.cpp 
+     framework/v_1_1/EventHandler.cpp 
+     framework/v_1_1/Reactor.cpp
+     framework/v_1_1/Connector.cpp
+     framework/v_1_1/ServicecHandler.cpp )
      
 add_executable(example_reactor_client
   ${example_1_client_source}
@@ -31,4 +34,6 @@ add_executable(example_reactor_client
 add_executable(example_reactor_server
   ${example_1_server_source}
   ${framework_v_1_0}
+  ${framework_v_1_1}
+  
 )

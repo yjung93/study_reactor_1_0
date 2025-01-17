@@ -10,7 +10,7 @@
 
 #include <cstdio>
 
-namespace v_2_0
+namespace v_1_1
 {
 
 // Forward declaration.
@@ -65,6 +65,6 @@ private:
 
 };
 
-} /* namespace v_2_0 */
+} /* namespace v_1_1 */
 
 #endif /* V_1_0_EVENTHANDLER_HPP_ */

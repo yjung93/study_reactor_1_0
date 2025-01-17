@@ -5,15 +5,15 @@
  *      Author: yjung93
  */
 
-#ifndef V_1_0_REACTOR_HPP_
-#define V_1_0_REACTOR_HPP_
+#ifndef V_1_1_REACTOR_HPP_
+#define V_1_1_REACTOR_HPP_
 
 #include <cstdio>
 #include <unordered_map>
 
-#include "EventHandler.hpp"
+#include "../v_1_1/EventHandler.hpp"
 
-namespace v_2_0
+namespace v_1_1
 {
 
 class Reactor
@@ -49,6 +49,6 @@ protected:
 
 };
 
-} /* namespace v_2_0 */
+} /* namespace v_1_1 */
 
-#endif /* V_1_0_REACTOR_HPP_ */
+#endif /* V_1_1_REACTOR_HPP_ */

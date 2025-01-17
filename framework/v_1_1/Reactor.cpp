@@ -5,13 +5,15 @@
  *      Author: yjung93
  */
 
+#include "../v_1_1/Reactor.hpp"
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <iostream>
-#include "Reactor.hpp"
-#include "EventHandler.hpp"
 
-namespace v_2_0
+#include "../v_1_1/EventHandler.hpp"
+
+namespace v_1_1
 {
 
 using namespace std;
@@ -223,4 +225,4 @@ void Reactor::cleanUpRemovedHandler()
          << endl;
 
 }
-}/* namespace v_2_0 */
+}/* namespace v_1_1 */

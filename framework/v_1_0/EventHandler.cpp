@@ -13,46 +13,15 @@ namespace v_1_0
 EventHandler::EventHandler( Reactor *reactor ) :
                 mReactor( reactor )
 {
-    // TODO Auto-generated constructor stub
-
 }
 
 EventHandler::~EventHandler()
 {
-    // TODO Auto-generated destructor stub
 }
 
 int EventHandler::handleInput( int fd )
 {
     printf( "EventHandler::%s\n", __FUNCTION__ );
-    return -1;
-
-}
-
-int EventHandler::handleOutput( int fd )
-{
-    printf( "EventHandler::%s\n", __FUNCTION__ );
-    return -1;
-
-}
-
-int EventHandler::handleException( int fd )
-{
-    printf( "EventHandler::%s\n", __FUNCTION__ );
-    return -1;
-
-}
-
-int EventHandler::handleClose( int fd )
-{
-    printf( "EventHandler::%s\n", __FUNCTION__ );
-    return -1;
-
-}
-
-int EventHandler::handleSignal( int signum )
-{
-    printf( "EventHandler::%s, signum:%d\n", __FUNCTION__, signum );
     return -1;
 
 }

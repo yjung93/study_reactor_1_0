@@ -5,9 +5,9 @@
  *      Author: yjung93
  */
 
-#include "EventHandler.hpp"
+#include "../v_1_1/EventHandler.hpp"
 
-namespace v_2_0
+namespace v_1_1
 {
 
 EventHandler::EventHandler( Reactor *reactor ) :
@@ -72,4 +72,4 @@ void EventHandler::setHandle( int fd )
     mFd = fd;
 }
 
-} /* namespace v_2_0 */
+} /* namespace v_1_1 */
