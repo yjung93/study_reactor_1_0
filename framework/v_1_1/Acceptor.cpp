@@ -65,29 +65,16 @@ int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::handleClose()
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::handleInput( int fd )
 {
-    std::cout << __FUNCTION__
+    std::cout << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::handleInput"
               << std::endl;
 
-//    int addrlen = sizeof(mAddress);
-//    int newSocketFd = accept( fd,
-//                              (struct sockaddr*) &mAddress,
-//                              (socklen_t*) &(addrlen) );
-//
-//    if ( newSocketFd < 0 )
-//    {
-//        perror( "accept failed" );
-//        exit (EXIT_FAILURE);
-//    }
-//
-//    ServerEventHandler *serverEventHandler =
-//                    new ServerEventHandler( getReactor() );
-//    serverEventHandler->setHandle( newSocketFd );
-//    serverEventHandler->open();
-//
-//    std::cout
-//    << "New connection established, socket FD: "
-//    << newSocketFd
-//    << std::endl;
+    SVC_HANDLER *svcHandler = 0;
+
+    makeSvcHandler( svcHandler );
+
+    acceptSvcHandler( svcHandler );
+
+    activateSvcHandler( svcHandler );
 
     return 0;
 }
@@ -95,19 +82,67 @@ int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::handleInput( int fd )
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::makeSvcHandler( SVC_HANDLER *&svcHandler )
 {
+    std::cout << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::makeSvcHandler"
+              << std::endl;
+
+    if ( svcHandler == nullptr )
+    {
+        svcHandler = new SVC_HANDLER;
+        svcHandler->setReactor( this->getReactor() );
+    }else
+    {
+        std::cout << __FUNCTION__
+                  << "svcHandler is not a null pointer, skip create svcHandler"
+                  << std::endl;
+    }
+
     return 0;
 }
 
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::acceptSvcHandler( SVC_HANDLER *svcHandler )
 {
-    return 0;
+    std::cout << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::acceptSvcHandler"
+              << std::endl;
+
+    // TBD:
+    if ( this->acceptor().accept( svcHandler->getHandle(), // stream
+                                  0, // remote address
+                                  0 )
+         == -1 )
+    {
+        // Close down handler to avoid memory leaks.
+//        svcHandler->close( CLOSE_DURING_NEW_CONNECTION );
+
+        return -1;
+    }else
+    {
+        return 0;
+
+    }
+
 }
 
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::activateSvcHandler( SVC_HANDLER *svcHandler )
 {
-    return 0;
+
+    std::cout << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::acceptSvcHandler"
+              << std::endl;
+
+    int result = 0;
+
+    if ( result == 0 && svcHandler->open( (void*) this ) == -1 )
+        result = -1;
+
+    if ( result == -1 )
+    {
+        // The connection was already made; so this close is a "normal" close
+        // operation.
+//        svcHandler->close( NORMAL_CLOSE_OPERATION );
+    }
+
+    return result;
 }
 
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>

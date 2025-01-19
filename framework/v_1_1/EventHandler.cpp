@@ -62,6 +62,11 @@ Reactor* EventHandler::getReactor() const
     return mReactor;
 }
 
+void EventHandler::setReactor( Reactor *reactor )
+{
+    mReactor = reactor;
+}
+
 int EventHandler::getHandle()
 {
     return mFd;
