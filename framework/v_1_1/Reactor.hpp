@@ -29,8 +29,6 @@ public:
 
     typedef std::unordered_map<int, EvHandlerInfo> EventHandlerRepository;
 
-    Reactor();
-    virtual ~Reactor();
     static Reactor* getInstance();
     static void closeSingleton();
     int runReactorEventLoop();
@@ -39,13 +37,16 @@ public:
     int registerHandler( EventHandler *event_handler, ReactorMask mask );
     int removeHandler( EventHandler *event_handler );
 
-
 protected:
 
     void cleanUpRemovedHandler();
 
     static Reactor *mInstance;
     EventHandlerRepository mEventHandlerRepository;
+
+private:
+    Reactor();
+    virtual ~Reactor();
 
 };
 

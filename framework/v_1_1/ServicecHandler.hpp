@@ -8,20 +8,24 @@
 #ifndef FRAMEWORK_V_1_1_SERVICECHANDLER_HPP_
 #define FRAMEWORK_V_1_1_SERVICECHANDLER_HPP_
 
-template <typename PEER_STREAM>
-class ServicecHandler
+#include "framework/v_1_1/EventHandler.hpp"
+namespace v_1_1
+{
+template<typename PEER_STREAM>
+class ServicecHandler: public EventHandler
 {
 public:
     ServicecHandler();
     virtual ~ServicecHandler();
 
-
-    PEER_STREAM &peer () const;
+    PEER_STREAM& peer() const;
 
 protected:
 
     /// Maintain connection with client.
     PEER_STREAM mPeer;
 };
+
+} // namespace v_1_1
 
 #endif /* FRAMEWORK_V_1_1_SERVICECHANDLER_HPP_ */

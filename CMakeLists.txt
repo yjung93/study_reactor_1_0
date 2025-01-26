@@ -15,16 +15,22 @@ set (example_1_server_source
      applications/example_reactor/Acceptor.cpp
      applications/example_reactor/ServerEventHandler.cpp )
      
+set (ex_acc_con_server_lib
+     applications/example_acceptor_connector/MainServer.cpp
+     applications/example_acceptor_connector/ExAcceptor.cpp
+     applications/example_acceptor_connector/InputHandler.cpp)
+     
 set (framework_v_1_0 
      framework/v_1_0/EventHandler.cpp 
      framework/v_1_0/Reactor.cpp )
 
-set (framework_v_1_1 
+set (framework_v_1_1_lib
      framework/v_1_1/Acceptor.cpp 
      framework/v_1_1/EventHandler.cpp 
      framework/v_1_1/Reactor.cpp
      framework/v_1_1/Connector.cpp
-     framework/v_1_1/ServicecHandler.cpp )
+     framework/v_1_1/ServicecHandler.cpp 
+     framework/v_1_1/SockAcceptor.cpp  )
      
 add_executable(example_reactor_client
   ${example_1_client_source}
@@ -34,6 +40,21 @@ add_executable(example_reactor_client
 add_executable(example_reactor_server
   ${example_1_server_source}
   ${framework_v_1_0}
-  ${framework_v_1_1}
-  
 )
+ 
+add_executable(ex_acc_con_server_1
+  ${ex_acc_con_server_lib}
+  ${framework_v_1_1_lib}
+)
+ 
+#add_executable(ex_acc_con_server_2
+#  applications/example_acceptor_connector/MainServer.cpp
+#  applications/example_acceptor_connector/ExAcceptor.cpp
+#  applications/example_acceptor_connector/InputHandler.cpp
+#  framework/v_1_1/Acceptor.cpp 
+#  framework/v_1_1/EventHandler.cpp 
+#  framework/v_1_1/Reactor.cpp
+#  framework/v_1_1/Connector.cpp
+#  framework/v_1_1/ServicecHandler.cpp  
+#  framework/v_1_1/SockAcceptor.cpp  
+#)

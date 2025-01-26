@@ -6,17 +6,16 @@
  */
 #include <iostream>
 #include "ServicecHandler.hpp"
-
+namespace v_1_1
+{
 template<typename PEER_STREAM>
 ServicecHandler<PEER_STREAM>::ServicecHandler()
 {
-    // TODO Auto-generated constructor stub
 
 }
 template<typename PEER_STREAM>
 ServicecHandler<PEER_STREAM>::~ServicecHandler()
 {
-    // TODO Auto-generated destructor stub
 }
 
 template<typename PEER_STREAM>
@@ -27,3 +26,5 @@ PEER_STREAM& ServicecHandler<PEER_STREAM>::peer() const
 
     return (PEER_STREAM&) this->mPeer;
 }
+
+} // namespace v_1_1
