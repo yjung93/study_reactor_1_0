@@ -22,13 +22,11 @@ Reactor *Reactor::mInstance = 0;
 
 Reactor::Reactor()
 {
-    // TODO Auto-generated constructor stub
 
 }
 
 Reactor::~Reactor()
 {
-    // TODO Auto-generated destructor stub
 }
 
 Reactor* Reactor::getInstance()
@@ -77,6 +75,11 @@ int Reactor::runReactorEventLoop()
 
 int Reactor::handleEvents()
 {
+    cout << "Reactor::"
+         << __FUNCTION__
+         << ":"
+         << endl;
+
     int result = -1;
     fd_set readfds;
 
@@ -101,6 +104,12 @@ int Reactor::handleEvents()
         }
 
         // Wait for an activity on one of the sockets
+        cout << "Reactor::"
+             << __FUNCTION__
+             << ": select(), maxFd="
+             << maxFd
+             << endl;
+
         int activity = select( maxFd + 1, &readfds, nullptr, nullptr, nullptr );
 
         if ( (activity < 0) && (errno != EINTR) )
@@ -109,7 +118,8 @@ int Reactor::handleEvents()
                       << std::endl;
         }else
         {
-            cout << __FUNCTION__
+            cout << "Reactor::"
+                 << __FUNCTION__
                  << ": select, activity="
                  << activity
                  << endl;
@@ -146,7 +156,8 @@ int Reactor::registerHandler( EventHandler *event_handler, ReactorMask mask )
 
     int result = 0;
 
-    if ( mEventHandlerRepository.find( event_handler->getHandle() ) == mEventHandlerRepository.end() )
+    if ( mEventHandlerRepository.find( event_handler->getHandle() )
+         == mEventHandlerRepository.end() )
     {
         EvHandlerInfo evHandlerInfo;
         evHandlerInfo.valid = true;
@@ -155,13 +166,15 @@ int Reactor::registerHandler( EventHandler *event_handler, ReactorMask mask )
 
         mEventHandlerRepository[event_handler->getHandle()] = evHandlerInfo;
 
-        cout << __FUNCTION__
+        cout << "Reactor::"
+             << __FUNCTION__
              << ": handle="
              << event_handler->getHandle()
              << endl;
     }else
     {
-        cout << __FUNCTION__
+        cout << "Reactor::"
+             << __FUNCTION__
              << ": handle="
              << event_handler->getHandle()
              << " already exist"
@@ -180,10 +193,12 @@ int Reactor::removeHandler( EventHandler *event_handler )
 
     int result = 0;
 
-    if ( mEventHandlerRepository.find( event_handler->getHandle() ) == mEventHandlerRepository.end() )
+    if ( mEventHandlerRepository.find( event_handler->getHandle() )
+         == mEventHandlerRepository.end() )
     {
 
-        cout << __FUNCTION__
+        cout << "Reactor::"
+             << __FUNCTION__
              << ": handle="
              << event_handler->getHandle()
              << "not exist"
@@ -194,7 +209,8 @@ int Reactor::removeHandler( EventHandler *event_handler )
     {
         mEventHandlerRepository[event_handler->getHandle()].valid = false;
 
-        cout << __FUNCTION__
+        cout << "Reactor::"
+             << __FUNCTION__
              << ": handle="
              << event_handler->getHandle()
              << " set to removed"
@@ -207,7 +223,8 @@ int Reactor::removeHandler( EventHandler *event_handler )
 void Reactor::cleanUpRemovedHandler()
 {
 
-    for ( auto itHandler = mEventHandlerRepository.begin(); itHandler != mEventHandlerRepository.end(); )
+    for ( auto itHandler = mEventHandlerRepository.begin();
+                    itHandler != mEventHandlerRepository.end(); )
     {
         if ( itHandler->second.valid == false )
         {
@@ -219,7 +236,8 @@ void Reactor::cleanUpRemovedHandler()
         }
     }
 
-    cout << __FUNCTION__
+    cout << "Reactor::"
+         << __FUNCTION__
          << ": Number of registered client = "
          << mEventHandlerRepository.size()
          << endl;

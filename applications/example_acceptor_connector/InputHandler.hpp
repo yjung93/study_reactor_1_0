@@ -20,6 +20,11 @@ public:
     virtual ~InputHandler();
 
     int open( void* );
+    int close();
+
+private:
+    int handleInput( int fd = INVALID_HANDLE ) override;
+    int mHandle;
 };
 
 } /* namespace ex_acceptor_connector */

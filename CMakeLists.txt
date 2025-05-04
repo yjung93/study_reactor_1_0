@@ -47,14 +47,3 @@ add_executable(ex_acc_con_server_1
   ${framework_v_1_1_lib}
 )
  
-#add_executable(ex_acc_con_server_2
-#  applications/example_acceptor_connector/MainServer.cpp
-#  applications/example_acceptor_connector/ExAcceptor.cpp
-#  applications/example_acceptor_connector/InputHandler.cpp
-#  framework/v_1_1/Acceptor.cpp 
-#  framework/v_1_1/EventHandler.cpp 
-#  framework/v_1_1/Reactor.cpp
-#  framework/v_1_1/Connector.cpp
-#  framework/v_1_1/ServicecHandler.cpp  
-#  framework/v_1_1/SockAcceptor.cpp  
-#)
