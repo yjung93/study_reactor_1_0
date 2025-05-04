@@ -14,6 +14,8 @@
 #include "framework/v_1_1/EventHandler.hpp"
 #include "framework/v_1_1/Reactor.hpp"
 
+using namespace std;
+
 namespace v_1_1
 {
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
@@ -54,6 +56,11 @@ template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::Acceptor( const typename PEER_ACCEPTOR::PEER_ADDR &localAddr, Reactor *reactor, int flags ) :
                 EventHandler( reactor )
 {
+    cout
+    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::"
+    << __FUNCTION__
+    << ": "
+    << endl;
     open( localAddr, reactor, flags );
 }
 
@@ -61,39 +68,63 @@ template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::Acceptor( Reactor *reactor, int flags ) :
                 EventHandler( reactor )
 {
+    cout
+    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::"
+    << __FUNCTION__
+    << ": "
+    << endl;
 }
 
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::~Acceptor()
 {
-    // TODO Auto-generated destructor stub
+    cout
+    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::"
+    << __FUNCTION__
+    << ": "
+    << endl;
 }
 
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::open( const typename PEER_ACCEPTOR::PEER_ADDR &localAddr, Reactor *reactor, int flags )
 {
+    cout
+    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::"
+    << __FUNCTION__
+    << ": "
+    << endl;
+    int result = 0;
+
     this->mPeerAcceptorAddr = localAddr;
 
     // Must supply a valid Reactor to Acceptor::open()...
-
-    if ( reactor == 0 )
+    if ( result != -1 && reactor == 0 )
     {
-        return -1;
+        result = -1;
     }
 
     // Open the underlying PEER_ACCEPTOR.
-    if ( this->mPeerAcceptor.open( mPeerAcceptorAddr ) == -1 )
-        return -1;
+    if ( result != -1 && this->mPeerAcceptor.open( mPeerAcceptorAddr ) == -1 )
+    {
+        result = -1;
+    }
 
-    int const result = reactor->registerHandler( this,
-                                                 EventHandler::ACCEPT_MASK );
+    if ( result != -1 )
+    {
+        setHandle( this->mPeerAcceptor.getHandle() );
+        result = reactor->registerHandler( this, EventHandler::ACCEPT_MASK );
+    }
     return result;
 }
 
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::close()
 {
-    std::cout << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::close" << std::endl;
+    cout
+    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::"
+    << __FUNCTION__
+    << ": "
+    << endl;
 
     return this->handleClose();
 }
@@ -101,16 +132,24 @@ int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::close()
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::handleClose( int handle )
 {
-
+    cout
+    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::"
+    << __FUNCTION__
+    << ": "
+    << endl;
     return 0;
 }
 
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::handleInput( int fd )
 {
-    std::cout
-    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::handleInput"
-    << std::endl;
+    cout
+    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::"
+    << __FUNCTION__
+    << ": "
+    << " fd="
+    << fd
+    << endl;
 
     SVC_HANDLER *svcHandler = 0;
 
@@ -126,9 +165,11 @@ int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::handleInput( int fd )
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::makeSvcHandler( SVC_HANDLER *&svcHandler )
 {
-    std::cout
-    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::makeSvcHandler"
-    << std::endl;
+    cout
+    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::"
+    << __FUNCTION__
+    << ": "
+    << endl;
 
     if ( svcHandler == nullptr )
     {
@@ -136,10 +177,10 @@ int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::makeSvcHandler( SVC_HANDLER *&svcHandl
         svcHandler->setReactor( this->getReactor() );
     }else
     {
-        std::cout
+        cout
         << __FUNCTION__
         << "svcHandler is not a null pointer, skip create svcHandler"
-        << std::endl;
+        << endl;
     }
 
     return 0;
@@ -148,32 +189,56 @@ int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::makeSvcHandler( SVC_HANDLER *&svcHandl
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::acceptSvcHandler( SVC_HANDLER *svcHandler )
 {
-    std::cout
-    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::acceptSvcHandler"
-    << std::endl;
+    cout
+    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::"
+    << __FUNCTION__
+    << ": "
+    << endl;
 
-    // TBD:
-    if ( this->acceptor().accept( svcHandler->getHandle() ) == -1 )
+    int result = 0;
+
+    int svchandle = this->acceptor().accept( mPeerAcceptor.getHandle() );
+
+    if ( svchandle == -1 )
     {
         // Close down handler to avoid memory leaks.
-//        svcHandler->close( CLOSE_DURING_NEW_CONNECTION );
 
-        return -1;
+        cout
+        << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::acceptSvcHandler"
+        << ": "
+        << "fail to accept"
+        << endl;
+
+        svcHandler->close();
+        result = -1;
     }
-    return 0;
+
+    if ( result != -1 )
+    {
+        cout
+        << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::acceptSvcHandler"
+        << ": "
+        << "svchandle = "
+        << svchandle
+        << endl;
+        svcHandler->setHandle( svchandle );
+    }
+    return result;
 }
 
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::activateSvcHandler( SVC_HANDLER *svcHandler )
 {
 
-    std::cout
-    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::acceptSvcHandler"
-    << std::endl;
+    cout
+    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::"
+    << __FUNCTION__
+    << ": "
+    << endl;
 
     int result = 0;
 
-    if ( (result == 0) && (svcHandler->open( (void*) this ) == -1) )
+    if ( svcHandler->open( (void*) this ) == -1 )
     {
         result = -1;
     }
@@ -181,8 +246,7 @@ int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::activateSvcHandler( SVC_HANDLER *svcHa
     if ( result == -1 )
     {
         // The connection was already made; so this close is a "normal" close
-        // operation.
-//        svcHandler->close( NORMAL_CLOSE_OPERATION );
+        svcHandler->close();
     }
 
     return result;
@@ -191,7 +255,11 @@ int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::activateSvcHandler( SVC_HANDLER *svcHa
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
 PEER_ACCEPTOR& Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::acceptor() const
 {
-    std::cout << __FUNCTION__ << std::endl;
+    cout
+    << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::"
+    << __FUNCTION__
+    << ": "
+    << endl;
     return const_cast<PEER_ACCEPTOR&>( this->mPeerAcceptor );
 }
 
