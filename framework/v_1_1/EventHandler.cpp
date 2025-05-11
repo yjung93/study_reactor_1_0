@@ -4,8 +4,10 @@
  *  Created on: Jan 12, 2024
  *      Author: yjung93
  */
+#include <iostream>
+#include "EventHandler.hpp"
 
-#include "../v_1_1/EventHandler.hpp"
+using namespace std;
 
 namespace v_1_1
 {
@@ -13,46 +15,66 @@ namespace v_1_1
 EventHandler::EventHandler( Reactor *reactor ) :
                 mReactor( reactor )
 {
-    // TODO Auto-generated constructor stub
-
+    cout << "EventHandler::"
+         << __FUNCTION__
+         << ": "
+         << endl;
 }
 
 EventHandler::~EventHandler()
 {
-    // TODO Auto-generated destructor stub
+    cout << "EventHandler::"
+         << __FUNCTION__
+         << ": "
+         << endl;
 }
 
 int EventHandler::handleInput( int fd )
 {
-    printf( "EventHandler::%s\n", __FUNCTION__ );
+    cout << "EventHandler::"
+         << __FUNCTION__
+         << ": "
+         << endl;
     return -1;
 
 }
 
 int EventHandler::handleOutput( int fd )
 {
-    printf( "EventHandler::%s\n", __FUNCTION__ );
+    cout << "EventHandler::"
+         << __FUNCTION__
+         << ": "
+         << endl;
     return -1;
 
 }
 
 int EventHandler::handleException( int fd )
 {
-    printf( "EventHandler::%s\n", __FUNCTION__ );
+    cout << "EventHandler::"
+         << __FUNCTION__
+         << ": "
+         << endl;
     return -1;
 
 }
 
 int EventHandler::handleClose( int fd )
 {
-    printf( "EventHandler::%s\n", __FUNCTION__ );
+    cout << "EventHandler::"
+         << __FUNCTION__
+         << ": "
+         << endl;
     return -1;
 
 }
 
 int EventHandler::handleSignal( int signum )
 {
-    printf( "EventHandler::%s, signum:%d\n", __FUNCTION__, signum );
+    cout << "EventHandler::"
+         << __FUNCTION__
+         << ": "
+         << endl;
     return -1;
 
 }
@@ -67,13 +89,19 @@ void EventHandler::setReactor( Reactor *reactor )
     mReactor = reactor;
 }
 
-int EventHandler::getHandle()
+int EventHandler::getHandle() const
 {
     return mFd;
 }
 
 void EventHandler::setHandle( int fd )
 {
+    cout << "EventHandler::"
+         << __FUNCTION__
+         << ": "
+         << "fd: "
+         << fd
+         << endl;
     mFd = fd;
 }
 

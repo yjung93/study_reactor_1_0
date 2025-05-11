@@ -12,6 +12,7 @@
 
 #include "framework/v_1_1/EventHandler.hpp"
 #include "framework/v_1_1/Reactor.hpp"
+#include "framework/v_1_1/SockStream.hpp"
 
 namespace v_1_1
 {
@@ -25,7 +26,7 @@ public:
     virtual ~SockAcceptor();
 
     int open( PEER_ADDR peerAddr );
-    int accept( int fd );
+    int accept( SockStream &newStream, int fd );
     void setHandle( int handle );
     int getHandle();
 

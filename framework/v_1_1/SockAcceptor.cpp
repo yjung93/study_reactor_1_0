@@ -5,6 +5,7 @@
  *      Author: yjung93
  */
 #include "SockAcceptor.hpp"
+
 #include <arpa/inet.h>
 #include <iostream>
 #include <unistd.h>
@@ -124,7 +125,7 @@ int SockAcceptor::open( PEER_ADDR peerAddr )
 
 }
 
-int SockAcceptor::accept( int fd )
+int SockAcceptor::accept( SockStream &newStream, int fd )
 {
     cout << "SockAcceptor::"
          << __FUNCTION__
@@ -147,6 +148,9 @@ int SockAcceptor::accept( int fd )
              << fd
              << endl;
         result = -1;
+    }else
+    {
+        newStream.setHandle( newSocketFd );
     }
 
     return (result != -1) ? newSocketFd : result;

@@ -8,23 +8,22 @@
 #ifndef APPLICATIONS_EXAMPLE_ACCEPTOR_CONNECTOR_INPUTHANDLER_HPP_
 #define APPLICATIONS_EXAMPLE_ACCEPTOR_CONNECTOR_INPUTHANDLER_HPP_
 
-#include "framework/v_1_1/EventHandler.hpp"
+#include "framework/v_1_1/ServiceHandler.hpp"
+#include "framework/v_1_1/SockStream.hpp"
 
 namespace ex_acceptor_connector
 {
 
-class InputHandler: public v_1_1::EventHandler
+class InputHandler: public v_1_1::ServiceHandler<v_1_1::SockStream>
 {
 public:
     InputHandler();
     virtual ~InputHandler();
 
-    int open( void* );
     int close();
 
 private:
     int handleInput( int fd = INVALID_HANDLE ) override;
-    int mHandle;
 };
 
 } /* namespace ex_acceptor_connector */

@@ -197,20 +197,30 @@ int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::acceptSvcHandler( SVC_HANDLER *svcHand
 
     int result = 0;
 
-    int svchandle = this->acceptor().accept( mPeerAcceptor.getHandle() );
-
-    if ( svchandle == -1 )
+    if ( svcHandler == nullptr )
     {
-        // Close down handler to avoid memory leaks.
-
-        cout
-        << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::acceptSvcHandler"
-        << ": "
-        << "fail to accept"
-        << endl;
-
-        svcHandler->close();
         result = -1;
+    }
+
+    int svchandle = -1;
+    if ( result != -1 )
+    {
+        svchandle = this->acceptor().accept( svcHandler->peer(),
+                                             mPeerAcceptor.getHandle() );
+
+        if ( svchandle == -1 )
+        {
+            // Close down handler to avoid memory leaks.
+
+            cout
+            << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::acceptSvcHandler"
+            << ": "
+            << "fail to accept"
+            << endl;
+
+            svcHandler->close();
+            result = -1;
+        }
     }
 
     if ( result != -1 )
@@ -221,7 +231,7 @@ int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::acceptSvcHandler( SVC_HANDLER *svcHand
         << "svchandle = "
         << svchandle
         << endl;
-        svcHandler->setHandle( svchandle );
+//        svcHandler->setHandle( svchandle );
     }
     return result;
 }
@@ -237,15 +247,21 @@ int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::activateSvcHandler( SVC_HANDLER *svcHa
     << endl;
 
     int result = 0;
-
-    if ( svcHandler->open( (void*) this ) == -1 )
+    if ( svcHandler == nullptr )
     {
         result = -1;
     }
 
+    if ( result != -1 )
+    {
+        if ( svcHandler->open( (void*) this ) == -1 )
+        {
+            result = -1;
+        }
+    }
+
     if ( result == -1 )
     {
-        // The connection was already made; so this close is a "normal" close
         svcHandler->close();
     }
 

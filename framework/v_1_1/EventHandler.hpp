@@ -63,7 +63,7 @@ public:
     Reactor* getReactor() const;
     void setReactor( Reactor *reactor );
 
-    int getHandle();
+    virtual int getHandle() const;
     void setHandle( int fd );
 
 protected:

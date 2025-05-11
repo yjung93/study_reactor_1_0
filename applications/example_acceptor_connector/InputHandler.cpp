@@ -9,7 +9,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
-
+#include <sys/socket.h>
 #include "InputHandler.hpp"
 #include "framework/v_1_1/Reactor.hpp"
 
@@ -19,8 +19,7 @@ namespace ex_acceptor_connector
 {
 
 InputHandler::InputHandler() :
-                EventHandler( v_1_1::Reactor::getInstance() ),
-                mHandle( 0 )
+                ServiceHandler( v_1_1::Reactor::getInstance() )
 {
     cout << "InputHandler::"
          << __FUNCTION__
@@ -36,18 +35,6 @@ InputHandler::~InputHandler()
          << endl;
 }
 
-int InputHandler::open( void* )
-{
-    int result = 0;
-    cout << "InputHandler::"
-         << __FUNCTION__
-         << ": "
-         << endl;
-
-    getReactor()->registerHandler( this, EventHandler::READ_MASK );
-    return result;
-}
-
 int InputHandler::handleInput( int fd )
 {
     cout << "InputHandler::"
@@ -59,7 +46,7 @@ int InputHandler::handleInput( int fd )
     char buffer[bufferSize] =
     { 0 };
 
-    int valread = read( fd, buffer, bufferSize );
+    int valread = peer().recv_n( buffer, bufferSize, 0 );
     if ( valread == 0 )
     {
         // Client disconnected
@@ -69,8 +56,11 @@ int InputHandler::handleInput( int fd )
              << "Client disconnected, socket FD: "
              << fd
              << endl;
-        ::close( fd );
+        peer().close_reader();
         getReactor()->removeHandler( this );
+    }else if ( valread < 0 )
+    {
+        perror( "recv failed" );
     }else
     {
         // Echo the message back to client
@@ -82,8 +72,7 @@ int InputHandler::handleInput( int fd )
              << endl;
 
         string messageToSend = "Echo - " + string( buffer );
-        send( fd, messageToSend.c_str(), messageToSend.size(), 0 );
-
+        peer().send_n( messageToSend.c_str(), messageToSend.size(), 0 );
         cout << "InputHandler::"
              << __FUNCTION__
              << ": "
@@ -106,3 +95,4 @@ int InputHandler::close()
 }
 
 } /* namespace ex_acceptor_connector */
+

@@ -29,8 +29,9 @@ set (framework_v_1_1_lib
      framework/v_1_1/EventHandler.cpp 
      framework/v_1_1/Reactor.cpp
      framework/v_1_1/Connector.cpp
-     framework/v_1_1/ServicecHandler.cpp 
-     framework/v_1_1/SockAcceptor.cpp  )
+     framework/v_1_1/ServiceHandler.cpp 
+     framework/v_1_1/SockAcceptor.cpp 
+     framework/v_1_1/SockStream.cpp )
      
 add_executable(example_reactor_client
   ${example_1_client_source}
