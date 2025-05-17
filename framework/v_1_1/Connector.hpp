@@ -10,7 +10,7 @@
 
 namespace v_1_1
 {
-
+//template<typename SVC_HANDLER, typename PEER_CONNECTOR>
 class Connector
 {
 public:
