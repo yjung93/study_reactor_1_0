@@ -44,6 +44,7 @@ protected:
     int handleInput( int fd = INVALID_HANDLE ) override;
     int handleClose( int handle = INVALID_HANDLE ) override;
 
+private:
     // Concrete factory for accepting connections from clients...
     PEER_ACCEPTOR mPeerAcceptor;
 
@@ -57,6 +58,6 @@ protected:
 } /* namespace v_1_1 */
 
 // for splitting the template class definition into .cpp
-#include "Acceptor.cpp"
+#include "framework/v_1_1/Acceptor.cpp"
 
 #endif /* FRAMEWORK_V_1_1_ACCEPTOR_HPP_ */

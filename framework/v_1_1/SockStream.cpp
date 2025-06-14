@@ -5,12 +5,19 @@
  *      Author: yjung93
  */
 
+#include <iostream>
+#include <unistd.h>
+
+#include "Config.hpp"
 #include "SockStream.hpp"
+
+using namespace std;
 
 namespace v_1_1
 {
 
-SockStream::SockStream()
+SockStream::SockStream() :
+                mHandle( INVALID_HANDLE )
 {
     // TODO Auto-generated constructor stub
 
@@ -47,6 +54,28 @@ int SockStream::close_reader()
 int SockStream::close_writer()
 {
     return ::shutdown( getHandle(), SHUT_WR );
+}
+
+int SockStream::open( int type, int protocolFamily, int protocol, int reuseAddr )
+{
+
+    int result = 0;
+
+    setHandle( socket( protocolFamily, type, protocol ) );
+
+    if ( this->getHandle() == INVALID_HANDLE )
+    {
+        result = -1;
+    }
+
+    cout << "SockStream::"
+         << __FUNCTION__
+         << ": "
+         << " handle : "
+         << getHandle()
+         << endl;
+
+    return result;
 }
 
 } /* namespace v_1_1 */

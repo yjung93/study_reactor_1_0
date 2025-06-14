@@ -18,6 +18,7 @@ set (framework_v_1_1_lib
      framework/v_1_1/Connector.cpp
      framework/v_1_1/ServiceHandler.cpp 
      framework/v_1_1/SockAcceptor.cpp 
+     framework/v_1_1/SockConnector.cpp 
      framework/v_1_1/SockStream.cpp )
 
 
@@ -35,7 +36,10 @@ set (ex_acc_con_server_lib
      applications/example_acceptor_connector/InputHandler.cpp)
 
 set (ex_acc_con_client_lib
-     applications/example_acceptor_connector/MainClient.cpp)
+     applications/example_acceptor_connector/MainClient.cpp
+     applications/example_acceptor_connector/ExConnector.cpp
+     applications/example_acceptor_connector/OutputHandler.cpp 
+     applications/example_acceptor_connector/Client.cpp)
          
 add_executable(example_reactor_client
   ${example_1_client_source}

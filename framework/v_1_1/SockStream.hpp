@@ -10,6 +10,9 @@
 
 #include <arpa/inet.h>
 
+#include "framework/v_1_1/Config.hpp"
+
+
 namespace v_1_1
 {
 
@@ -26,6 +29,7 @@ public:
     ssize_t send_n( const void *buf, size_t size, int flags );
     int close_reader();
     int close_writer();
+    int open( int type, int protocolFamily, int protocol, int reuseAddr );
 
     typedef struct sockaddr_in PEER_ADDR;
 
