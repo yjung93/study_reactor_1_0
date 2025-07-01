@@ -57,7 +57,7 @@ int OutputHandler::handleInput( int fd )
              << fd
              << endl;
         peer().close_reader();
-        getReactor()->removeHandler( this );
+        getReactor()->removeHandler( this, ALL_EVENTS_MASK );
     }else if ( valread < 0 )
     {
         perror( "recv failed" );
@@ -73,6 +73,16 @@ int OutputHandler::handleInput( int fd )
 
     }
 
+    return 0;
+}
+
+int OutputHandler::handleOutput( int fd )
+{
+    cout << "OutputHandler::"
+         << __FUNCTION__
+         << endl;
+
+//    open((void*)this);
     return 0;
 }
 

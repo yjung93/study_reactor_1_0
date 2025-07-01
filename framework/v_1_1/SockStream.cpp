@@ -5,9 +5,6 @@
  *      Author: yjung93
  */
 
-#include <iostream>
-#include <unistd.h>
-
 #include "Config.hpp"
 #include "SockStream.hpp"
 
@@ -61,7 +58,7 @@ int SockStream::open( int type, int protocolFamily, int protocol, int reuseAddr 
 
     int result = 0;
 
-    setHandle( socket( protocolFamily, type, protocol ) );
+    setHandle( ::socket( protocolFamily, type, protocol ) );
 
     if ( this->getHandle() == INVALID_HANDLE )
     {
@@ -74,6 +71,99 @@ int SockStream::open( int type, int protocolFamily, int protocol, int reuseAddr 
          << " handle : "
          << getHandle()
          << endl;
+
+    return result;
+}
+
+int SockStream::enable( int value )
+{
+    int result = 0;
+    if ( value == O_NONBLOCK )
+    {
+        int flags = ::fcntl( this->getHandle(), F_GETFL, 0 );
+        if ( flags < 0 )
+        {
+            std::perror( "fcntl(F_GETFL)" );
+            ::close( this->getHandle() );
+            result = -1;
+        }
+
+        flags |= O_NONBLOCK;
+
+        if ( (result != -1 && ::fcntl( this->getHandle(), F_SETFL, flags ) < 0) )
+        {
+            std::perror( "fcntl(F_SETFL)" );
+            ::close( this->getHandle() );
+            result = -1;
+        }
+    }
+
+    cout << "SockStream::"
+         << __FUNCTION__
+         << ": "
+         << " value = 0x"
+         << std::hex
+         << value
+         << ", fcntl-value = 0x"
+         << std::hex
+         << ::fcntl( this->getHandle(), F_GETFL, 0 )
+         << endl;
+
+    return result;
+}
+
+int SockStream::disable( int value )
+{
+    int result = 0;
+    if ( value == O_NONBLOCK )
+    {
+        int flags = ::fcntl( this->getHandle(), F_GETFL, 0 );
+        if ( flags < 0 )
+        {
+            std::perror( "fcntl(F_GETFL)" );
+            ::close( this->getHandle() );
+            result = -1;
+        }
+
+        flags &= ~(O_NONBLOCK);
+
+        if ( (result != -1 && fcntl( this->getHandle(), F_SETFL, flags ) < 0) )
+        {
+            std::perror( "fcntl(F_SETFL)" );
+            ::close( this->getHandle() );
+            result = -1;
+        }
+
+    }
+    cout << "SockStream::"
+         << __FUNCTION__
+         << ": "
+         << " value = 0x"
+         << std::hex
+         << value
+         << ", fcntl-value = 0x"
+         << std::hex
+         << ::fcntl( this->getHandle(), F_GETFL, 0 )
+         << endl;
+
+    return result;
+}
+
+int SockStream::getRemoteAddr( sockaddr_in &socketAddr ) const
+{
+    cout << "SockStream::"
+         << __FUNCTION__
+         << ": "
+         << endl;
+
+    int result = 0;
+    socklen_t peerLen = sizeof(socketAddr);
+    sockaddr *addr = reinterpret_cast<sockaddr*>( &socketAddr );
+
+    if ( ::getpeername( this->getHandle(), addr, &peerLen ) == -1 )
+    {
+        result = -1;
+    }
 
     return result;
 }

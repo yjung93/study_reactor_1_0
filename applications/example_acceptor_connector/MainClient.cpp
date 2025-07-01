@@ -19,11 +19,13 @@ void clientThreadFuncion( v_1_1::Reactor *reactor )
 int main()
 {
 
-    Client client;
-    client.initialize();
+
 
     std::thread clientThread( clientThreadFuncion,
                               v_1_1::Reactor::getInstance() );
+
+    Client client;
+    client.initialize();
 
     bool loop = true;
     while ( loop )

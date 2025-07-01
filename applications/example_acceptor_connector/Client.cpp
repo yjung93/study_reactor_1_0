@@ -35,14 +35,15 @@ void Client::initialize()
     peerAddr.sin_port = htons( PORT );
 
     // Convert IPv4 and IPv6 addresses from text to binary form
-    if ( inet_pton( AF_INET, "127.0.0.1", &peerAddr.sin_addr ) <= 0 )
+    if ( ::inet_pton( AF_INET, "127.0.0.1", &peerAddr.sin_addr ) <= 0 )
     {
         std::cerr << "Invalid address / Address not supported"
                   << std::endl;
     }
 
     OutputHandler *pOutputHandler = &mOutputHandler;
-    int result = mConnector.connect( pOutputHandler, peerAddr );
+    int result = mConnector.connect( pOutputHandler, peerAddr, O_NONBLOCK );
+//    int result = mConnector.connect( pOutputHandler, peerAddr, 0 );
     cout << "Client::"
          << __FUNCTION__
          << ": "

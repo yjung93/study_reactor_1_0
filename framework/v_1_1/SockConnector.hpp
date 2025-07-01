@@ -34,7 +34,7 @@ protected:
 
     int open( SockStream &newStream, int protocolFamily, int protocol, int reuseAddr );
 
-    int connectStart( SockStream &new_stream );
+    int connectStart( SockStream &new_stream, int flags );
 
     int connectFinish( SockStream &new_stream, int result );
 

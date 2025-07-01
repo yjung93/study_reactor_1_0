@@ -51,7 +51,7 @@ public:
         DONT_CALL = (1 << 9)
     };
 
-    EventHandler( Reactor *reactor );
+    EventHandler( Reactor *reactor = nullptr );
     virtual ~EventHandler();
 
     virtual int handleInput( int fd = INVALID_HANDLE );

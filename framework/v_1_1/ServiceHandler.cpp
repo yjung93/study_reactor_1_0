@@ -45,6 +45,7 @@ int ServiceHandler<PEER_STREAM>::open( void* )
     int result = 0;
     if ( getReactor() != nullptr )
     {
+        cout << "ServiceHandler<PEER_STREAM>::" << __FUNCTION__ << ": register Handler" << endl;
         int rc = getReactor()->registerHandler( this, EventHandler::READ_MASK );
         if ( rc == -1 )
         {

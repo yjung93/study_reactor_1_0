@@ -9,9 +9,11 @@
 #define FRAMEWORK_V_1_1_SOCKSTREAM_HPP_
 
 #include <arpa/inet.h>
+#include <iostream>
+#include <unistd.h>
+#include <fcntl.h>
 
 #include "framework/v_1_1/Config.hpp"
-
 
 namespace v_1_1
 {
@@ -30,6 +32,9 @@ public:
     int close_reader();
     int close_writer();
     int open( int type, int protocolFamily, int protocol, int reuseAddr );
+    int enable( int value );
+    int disable( int value );
+    int getRemoteAddr( sockaddr_in &socketAddr ) const;
 
     typedef struct sockaddr_in PEER_ADDR;
 

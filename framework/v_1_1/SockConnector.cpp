@@ -9,6 +9,7 @@
 #include <arpa/inet.h>
 #include <iostream>
 #include <unistd.h>
+#include <fcntl.h>
 
 using namespace std;
 
@@ -66,7 +67,7 @@ int SockConnector::connect( SockStream &newStream, const PEER_ADDR &remoteAddr, 
     result = open( newStream, remoteAddr.sin_family, protocol, reuse_addr );
     if ( result != -1 )
     {
-        result = connectStart( newStream );
+        result = connectStart( newStream, flags );
     }
 
     if ( result != -1 )
@@ -75,7 +76,6 @@ int SockConnector::connect( SockStream &newStream, const PEER_ADDR &remoteAddr, 
                             (struct sockaddr*) &remoteAddr,
                             sizeof(remoteAddr) );
     }
-
     return connectFinish( newStream, result );
 }
 
@@ -101,22 +101,22 @@ int SockConnector::open( SockStream &newStream, int protocolFamily, int protocol
     return result;
 }
 
-int SockConnector::connectStart( SockStream &new_stream )
+int SockConnector::connectStart( SockStream &newStream, int flags )
 {
     int result = 0;
 
-    // TBD
-
+    if ( (flags & O_NONBLOCK) != 0 )
+    {
+        newStream.enable( O_NONBLOCK );
+    }
     return result;
 }
 
 int SockConnector::connectFinish( SockStream &new_stream, int result )
 {
     int returnVaue = 0;
-
-    // TBD
-
     returnVaue = result;
+
     return returnVaue;
 }
 

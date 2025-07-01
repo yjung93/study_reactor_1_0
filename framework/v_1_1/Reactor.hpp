@@ -8,10 +8,14 @@
 #ifndef V_1_1_REACTOR_HPP_
 #define V_1_1_REACTOR_HPP_
 
+#include <string>
 #include <cstdio>
 #include <unordered_map>
+#include <mutex>
+#include <fcntl.h>
+#include <unistd.h>
 
-#include "../v_1_1/EventHandler.hpp"
+#include "EventHandler.hpp"
 
 namespace v_1_1
 {
@@ -22,7 +26,6 @@ public:
 
     struct EvHandlerInfo
     {
-        bool valid = false;
         ReactorMask mask;
         EventHandler *evHandler;
     };
@@ -35,11 +38,11 @@ public:
     int handleEvents();
     int deactivated();
     int registerHandler( EventHandler *event_handler, ReactorMask mask );
-    int removeHandler( EventHandler *event_handler );
+    int removeHandler( EventHandler *event_handler, ReactorMask mask );
+    void dbgRepository( std::string title );
 
 protected:
 
-    void cleanUpRemovedHandler();
 
     static Reactor *mInstance;
     EventHandlerRepository mEventHandlerRepository;
@@ -47,7 +50,10 @@ protected:
 private:
     Reactor();
     virtual ~Reactor();
+    void notifySelectLoop();
 
+    std::recursive_mutex mMutexRepoository;
+    int mWakeupPipe[2];  // 0: read end, 1: write end
 };
 
 } /* namespace v_1_1 */

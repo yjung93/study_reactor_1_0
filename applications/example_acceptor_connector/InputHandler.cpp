@@ -57,7 +57,7 @@ int InputHandler::handleInput( int fd )
              << fd
              << endl;
         peer().close_reader();
-        getReactor()->removeHandler( this );
+        getReactor()->removeHandler( this, ALL_EVENTS_MASK );
     }else if ( valread < 0 )
     {
         perror( "recv failed" );

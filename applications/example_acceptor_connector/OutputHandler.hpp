@@ -25,6 +25,7 @@ public:
 
 private:
     int handleInput( int fd = INVALID_HANDLE ) override;
+    int handleOutput( int fd = INVALID_HANDLE ) override;
 };
 
 } /* namespace ex_acceptor_connector */
