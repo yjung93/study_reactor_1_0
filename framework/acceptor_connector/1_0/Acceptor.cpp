@@ -5,17 +5,17 @@
  *      Author: yjung93
  */
 
-#ifndef FRAMEWORK_V_1_1_ACCEPTOR_CPP_
-#define FRAMEWORK_V_1_1_ACCEPTOR_CPP_
+#ifndef FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_ACCEPTOR_CPP_
+#define FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_ACCEPTOR_CPP_
 
 #include "Acceptor.hpp"
 
-namespace v_1_1
+namespace AcceptorConnector_1_0
 {
 
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
-Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::Acceptor( const typename PEER_ACCEPTOR::PEER_ADDR &localAddr, Reactor *reactor, int flags ) :
-                EventHandler( reactor )
+Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::Acceptor( const typename PEER_ACCEPTOR::PEER_ADDR &localAddr, Reactor_1_0::Reactor *reactor, int flags ) :
+                Reactor_1_0::EventHandler( reactor )
 {
     cout
     << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::"
@@ -26,8 +26,8 @@ Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::Acceptor( const typename PEER_ACCEPTOR::PE
 }
 
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
-Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::Acceptor( Reactor *reactor, int flags ) :
-                EventHandler( reactor )
+Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::Acceptor( Reactor_1_0::Reactor *reactor, int flags ) :
+                Reactor_1_0::EventHandler( reactor )
 {
     cout
     << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::"
@@ -47,7 +47,7 @@ Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::~Acceptor()
 }
 
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
-int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::open( const typename PEER_ACCEPTOR::PEER_ADDR &localAddr, Reactor *reactor, int flags )
+int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::open( const typename PEER_ACCEPTOR::PEER_ADDR &localAddr, Reactor_1_0::Reactor *reactor, int flags )
 {
     cout
     << "Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::"
@@ -73,7 +73,7 @@ int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::open( const typename PEER_ACCEPTOR::PE
     if ( result != -1 )
     {
         setHandle( this->mPeerAcceptor.getHandle() );
-        result = reactor->registerHandler( this, EventHandler::ACCEPT_MASK );
+        result = reactor->registerHandler( this, Reactor_1_0::EventHandler::ACCEPT_MASK );
     }
     return result;
 }
@@ -239,6 +239,6 @@ PEER_ACCEPTOR& Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::acceptor() const
     << endl;
     return const_cast<PEER_ACCEPTOR&>( this->mPeerAcceptor );
 }
-} /* namespace v_1_1 */
+} /* namespace AcceptorConnector_1_0 */
 
-#endif /* FRAMEWORK_V_1_1_ACCEPTOR_HPP_ */
+#endif /* FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_ACCEPTOR_HPP_ */

@@ -8,13 +8,13 @@
 #ifndef APPLICATIONS_EXAMPLE_ACCEPTOR_CONNECTOR_INPUTHANDLER_HPP_
 #define APPLICATIONS_EXAMPLE_ACCEPTOR_CONNECTOR_INPUTHANDLER_HPP_
 
-#include "framework/v_1_1/ServiceHandler.hpp"
-#include "framework/v_1_1/SockStream.hpp"
+#include "framework/acceptor_connector/1_0/ServiceHandler.hpp"
+#include "framework/acceptor_connector/1_0/SockStream.hpp"
 
 namespace ex_acceptor_connector
 {
 
-class InputHandler: public v_1_1::ServiceHandler<v_1_1::SockStream>
+class InputHandler: public AcceptorConnector_1_0::ServiceHandler<AcceptorConnector_1_0::SockStream>
 {
 public:
     InputHandler();

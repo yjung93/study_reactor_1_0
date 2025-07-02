@@ -29,7 +29,7 @@ Client::~Client()
 
 void Client::initialize()
 {
-    v_1_1::SockConnector::PEER_ADDR peerAddr;
+    AcceptorConnector_1_0::SockConnector::PEER_ADDR peerAddr;
     peerAddr.sin_family = AF_INET;
     peerAddr.sin_addr.s_addr = INADDR_ANY;
     peerAddr.sin_port = htons( PORT );

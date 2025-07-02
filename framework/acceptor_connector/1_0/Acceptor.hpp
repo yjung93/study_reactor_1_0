@@ -5,32 +5,32 @@
  *      Author: yjung93
  */
 
-#ifndef FRAMEWORK_V_1_1_ACCEPTOR_HPP_
-#define FRAMEWORK_V_1_1_ACCEPTOR_HPP_
+#ifndef FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_ACCEPTOR_HPP_
+#define FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_ACCEPTOR_HPP_
 
 #include <arpa/inet.h>
 #include <iostream>
 
-#include "framework/v_1_1/EventHandler.hpp"
-#include "framework/v_1_1/Reactor.hpp"
+#include "framework/reactor/1_0/EventHandler.hpp"
+#include "framework/reactor/1_0/Reactor.hpp"
 
 using namespace std;
 
-namespace v_1_1
+namespace AcceptorConnector_1_0
 {
 template<typename SVC_HANDLER, typename PEER_ACCEPTOR>
-class Acceptor: public EventHandler
+class Acceptor: public Reactor_1_0::EventHandler
 
 {
 public:
 
-    Acceptor( Reactor *reactor = 0, int flags = 0 );
-    Acceptor( const typename PEER_ACCEPTOR::PEER_ADDR &localAddr, Reactor *reactor =
+    Acceptor( Reactor_1_0::Reactor *reactor = 0, int flags = 0 );
+    Acceptor( const typename PEER_ACCEPTOR::PEER_ADDR &localAddr, Reactor_1_0::Reactor *reactor =
                     0, int flags = 0 );
     virtual ~Acceptor();
 
-    virtual int open( const typename PEER_ACCEPTOR::PEER_ADDR &localAddr, Reactor *reactor =
-                    Reactor::getInstance(), int flags = 0 );
+    virtual int open( const typename PEER_ACCEPTOR::PEER_ADDR &localAddr, Reactor_1_0::Reactor *reactor =
+                    Reactor_1_0::Reactor::getInstance(), int flags = 0 );
     virtual int close();
 
     virtual PEER_ACCEPTOR& acceptor() const;
@@ -53,11 +53,9 @@ private:
 
 };
 
-
-
-} /* namespace v_1_1 */
+} /* namespace AcceptorConnector_1_0 */
 
 // for splitting the template class definition into .cpp
-#include "framework/v_1_1/Acceptor.cpp"
+#include "framework/acceptor_connector/1_0/Acceptor.cpp"
 
-#endif /* FRAMEWORK_V_1_1_ACCEPTOR_HPP_ */
+#endif /* FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_ACCEPTOR_HPP_ */

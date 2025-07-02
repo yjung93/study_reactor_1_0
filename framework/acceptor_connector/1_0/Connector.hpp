@@ -5,16 +5,16 @@
  *      Author: yjung93
  */
 
-#ifndef FRAMEWORK_V_1_1_CONNECTOR_HPP_
-#define FRAMEWORK_V_1_1_CONNECTOR_HPP_
+#ifndef FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_CONNECTOR_HPP_
+#define FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_CONNECTOR_HPP_
 
-#include "framework/v_1_1/Config.hpp"
-#include "framework/v_1_1/EventHandler.hpp"
-#include "framework/v_1_1/Reactor.hpp"
+#include "framework/acceptor_connector/1_0/Config.hpp"
+#include "framework/reactor/1_0/EventHandler.hpp"
+#include "framework/reactor/1_0/Reactor.hpp"
 
 using namespace std;
 
-namespace v_1_1
+namespace AcceptorConnector_1_0
 {
 
 /**
@@ -38,7 +38,7 @@ public:
 };
 
 template<class SVC_HANDLER>
-class NonBlockingConnectHandler: public EventHandler
+class NonBlockingConnectHandler: public Reactor_1_0::EventHandler
 {
 public:
     /// Constructor.
@@ -76,7 +76,7 @@ private:
 };
 
 template<typename SVC_HANDLER, typename PEER_CONNECTOR>
-class Connector: public ConnectorBase<SVC_HANDLER>, public EventHandler
+class Connector: public ConnectorBase<SVC_HANDLER>, public Reactor_1_0::EventHandler
 {
 public:
     typedef typename SVC_HANDLER::AddrType AddrType;
@@ -87,17 +87,17 @@ public:
     typedef typename PEER_CONNECTOR::PEER_ADDR PEER_ADDR_TYPEDEF;
     typedef NonBlockingConnectHandler<SVC_HANDLER> NBCH;
 
-    Connector( Reactor *reactor = 0, int flags = 0 );
+    Connector( Reactor_1_0::Reactor *reactor = 0, int flags = 0 );
     virtual ~Connector();
 
-    virtual int open( Reactor *reactor = Reactor::getInstance(), int flags = 0 );
+    virtual int open( Reactor_1_0::Reactor *reactor = Reactor_1_0::Reactor::getInstance(), int flags = 0 );
     bool close( SVC_HANDLER *&sh );
 
     /// Set Reactor.
-    virtual void setReactor( Reactor *reactor );
+    virtual void setReactor( Reactor_1_0::Reactor *reactor );
 
     /// Get Reactor.
-    virtual Reactor* getReactor() const;
+    virtual Reactor_1_0::Reactor* getReactor() const;
 
     virtual int connect( SVC_HANDLER *&svcHandler, const typename PEER_CONNECTOR::PEER_ADDR &remoteAddr, int flags =
                     0 );
@@ -117,13 +117,13 @@ protected:
 
 private:
     PEER_CONNECTOR mConnector;
-    Reactor *mReactor;
+    Reactor_1_0::Reactor *mReactor;
     int mFlags;
 };
 
-} /* namespace v_1_1 */
+} /* namespace AcceptorConnector_1_0 */
 
 // for splitting the template class definition into .cpp
-#include "framework/v_1_1/Connector.cpp"
+#include "framework/acceptor_connector/1_0/Connector.cpp"
 
-#endif /* FRAMEWORK_V_1_1_CONNECTOR_HPP_ */
+#endif /* FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_CONNECTOR_HPP_ */

@@ -19,7 +19,7 @@ namespace example_reactor
 constexpr int PORT = 8080;
 constexpr int BACKLOG = 5;
 
-Acceptor::Acceptor( v_1_0::Reactor *reactor ) :
+Acceptor::Acceptor( Reactor_1_0::Reactor *reactor ) :
                 EventHandler( reactor )
 {
 

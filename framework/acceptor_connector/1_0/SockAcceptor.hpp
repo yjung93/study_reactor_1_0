@@ -5,16 +5,16 @@
  *      Author: yjung93
  */
 
-#ifndef FRAMEWORK_V_1_1_SOCKACCEPTOR_HPP_
-#define FRAMEWORK_V_1_1_SOCKACCEPTOR_HPP_
+#ifndef FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_SOCKACCEPTOR_HPP_
+#define FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_SOCKACCEPTOR_HPP_
 
 #include <arpa/inet.h>
 
-#include "framework/v_1_1/EventHandler.hpp"
-#include "framework/v_1_1/Reactor.hpp"
-#include "framework/v_1_1/SockStream.hpp"
+#include "framework/reactor/1_0/EventHandler.hpp"
+#include "framework/reactor/1_0/Reactor.hpp"
+#include "framework/acceptor_connector/1_0/SockStream.hpp"
 
-namespace v_1_1
+namespace AcceptorConnector_1_0
 {
 
 class SockAcceptor
@@ -22,7 +22,7 @@ class SockAcceptor
 public:
     typedef struct sockaddr_in PEER_ADDR;
 
-    SockAcceptor( v_1_1::Reactor *reactor = v_1_1::Reactor::getInstance() );
+    SockAcceptor( Reactor_1_0::Reactor *reactor = Reactor_1_0::Reactor::getInstance() );
     virtual ~SockAcceptor();
 
     int open( PEER_ADDR peerAddr );

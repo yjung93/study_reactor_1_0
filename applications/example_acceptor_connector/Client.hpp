@@ -8,8 +8,8 @@
 #ifndef APPLICATIONS_EXAMPLE_ACCEPTOR_CONNECTOR_CLIENT_HPP_
 #define APPLICATIONS_EXAMPLE_ACCEPTOR_CONNECTOR_CLIENT_HPP_
 
-#include "applications/example_acceptor_connector/ExConnector.hpp"
 #include "applications/example_acceptor_connector/OutputHandler.hpp"
+#include "ConnectorImpl.hpp"
 
 namespace ex_acceptor_connector
 {
@@ -27,7 +27,7 @@ public:
 
 private:
 
-    ExConnector mConnector;
+    ConnectorImpl mConnector;
     OutputHandler mOutputHandler;
 };
 

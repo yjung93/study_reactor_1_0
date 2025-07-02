@@ -10,16 +10,16 @@
 
 #include <arpa/inet.h>
 
-#include "framework/v_1_0/EventHandler.hpp"
-#include "framework/v_1_0/Reactor.hpp"
+#include "framework/reactor/1_0/EventHandler.hpp"
+#include "framework/reactor/1_0/Reactor.hpp"
 
 namespace example_reactor
 {
 
-class Acceptor: public v_1_0::EventHandler
+class Acceptor: public Reactor_1_0::EventHandler
 {
 public:
-    Acceptor( v_1_0::Reactor *reactor = v_1_0::Reactor::getInstance() );
+    Acceptor( Reactor_1_0::Reactor *reactor = Reactor_1_0::Reactor::getInstance() );
     virtual ~Acceptor();
 
     void open();

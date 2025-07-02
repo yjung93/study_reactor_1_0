@@ -5,17 +5,17 @@
  *      Author: yjung93
  */
 
-#ifndef FRAMEWORK_V_1_1_SOCKSTREAM_HPP_
-#define FRAMEWORK_V_1_1_SOCKSTREAM_HPP_
+#ifndef FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_SOCKSTREAM_HPP_
+#define FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_SOCKSTREAM_HPP_
 
 #include <arpa/inet.h>
 #include <iostream>
 #include <unistd.h>
 #include <fcntl.h>
 
-#include "framework/v_1_1/Config.hpp"
+#include "framework/acceptor_connector/1_0/Config.hpp"
 
-namespace v_1_1
+namespace AcceptorConnector_1_0
 {
 
 class SockStream
@@ -42,6 +42,6 @@ private:
     int mHandle;
 };
 
-} /* namespace v_1_1 */
+} /* namespace AcceptorConnector_1_0 */
 
-#endif /* FRAMEWORK_V_1_1_SOCKSTREAM_HPP_ */
+#endif /* FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_SOCKSTREAM_HPP_ */

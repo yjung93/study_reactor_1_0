@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace v_1_1
+namespace Reactor_1_0
 {
 
 EventHandler::EventHandler( Reactor *reactor ) :
@@ -105,4 +105,4 @@ void EventHandler::setHandle( int fd )
     mFd = fd;
 }
 
-} /* namespace v_1_1 */
+} /* namespace Reactor_1_0 */

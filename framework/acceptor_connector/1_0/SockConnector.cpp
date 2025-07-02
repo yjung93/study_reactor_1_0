@@ -13,13 +13,13 @@
 
 using namespace std;
 
-namespace v_1_1
+namespace AcceptorConnector_1_0
 {
 
 constexpr int PORT = 8080;
 constexpr int BACKLOG = 5;
 
-SockConnector::SockConnector( v_1_1::Reactor *reactor ) :
+SockConnector::SockConnector( Reactor_1_0::Reactor *reactor ) :
                 mHandle( 0 )
 {
     cout << "SockConnector::"

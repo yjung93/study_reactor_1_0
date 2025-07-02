@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace v_1_1
+namespace AcceptorConnector_1_0
 {
 
 SockStream::SockStream() :
@@ -168,4 +168,4 @@ int SockStream::getRemoteAddr( sockaddr_in &socketAddr ) const
     return result;
 }
 
-} /* namespace v_1_1 */
+} /* namespace AcceptorConnector_1_0 */

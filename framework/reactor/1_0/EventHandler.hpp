@@ -5,12 +5,12 @@
  *      Author: yjung93
  */
 
-#ifndef V_1_0_EVENTHANDLER_HPP_
-#define V_1_0_EVENTHANDLER_HPP_
+#ifndef REACTOR_1_0_EVENTHANDLER_HPP_
+#define REACTOR_1_0_EVENTHANDLER_HPP_
 
 #include <cstdio>
 
-namespace v_1_1
+namespace Reactor_1_0
 {
 
 // Forward declaration.
@@ -74,6 +74,6 @@ private:
 
 };
 
-} /* namespace v_1_1 */
+} /* namespace Reactor_1_0 */
 
-#endif /* V_1_0_EVENTHANDLER_HPP_ */
+#endif /* REACTOR_1_0_EVENTHANDLER_HPP_ */

@@ -9,11 +9,11 @@
 #include <iostream>
 #include <thread>
 
-#include "framework/v_1_0/Reactor.hpp"
+#include "framework/reactor/1_0/Reactor.hpp"
 
 using namespace std;
 
-void serverThreadFuncion( v_1_0::Reactor *reactor )
+void serverThreadFuncion( Reactor_1_0::Reactor *reactor )
 {
     cout << "serverThreadFuncion"
          << endl;
@@ -24,10 +24,11 @@ void serverThreadFuncion( v_1_0::Reactor *reactor )
 int main( int argc, char **argv )
 {
 
-    v_1_0::Reactor reactor;
-    example_reactor::Acceptor acceptor( &reactor );
+    Reactor_1_0::Reactor *reactor = Reactor_1_0::Reactor::getInstance();
 
-    std::thread serverThread( serverThreadFuncion, &reactor );
+    example_reactor::Acceptor acceptor( reactor );
+
+    std::thread serverThread( serverThreadFuncion, reactor );
 
     // Wait for the thread to finish execution
     if ( serverThread.joinable() )

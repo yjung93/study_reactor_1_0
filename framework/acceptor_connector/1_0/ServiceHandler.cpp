@@ -5,17 +5,17 @@
  *      Author: yjung93
  */
 
-#ifndef FRAMEWORK_V_1_1_ServiceHandler_CPP_
-#define FRAMEWORK_V_1_1_ServiceHandler_CPP_
+#ifndef FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_ServiceHandler_CPP_
+#define FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_ServiceHandler_CPP_
 
 #include <iostream>
 #include "ServiceHandler.hpp"
-namespace v_1_1
+namespace AcceptorConnector_1_0
 {
 
 template<typename PEER_STREAM>
-ServiceHandler<PEER_STREAM>::ServiceHandler( Reactor *reactor ) :
-                EventHandler( reactor )
+ServiceHandler<PEER_STREAM>::ServiceHandler( Reactor_1_0::Reactor *reactor ) :
+                Reactor_1_0::EventHandler( reactor )
 {
     cout << "ServiceHandler<PEER_STREAM>::" << __FUNCTION__ << ": " << endl;
 }
@@ -46,7 +46,7 @@ int ServiceHandler<PEER_STREAM>::open( void* )
     if ( getReactor() != nullptr )
     {
         cout << "ServiceHandler<PEER_STREAM>::" << __FUNCTION__ << ": register Handler" << endl;
-        int rc = getReactor()->registerHandler( this, EventHandler::READ_MASK );
+        int rc = getReactor()->registerHandler( this, Reactor_1_0::EventHandler::READ_MASK );
         if ( rc == -1 )
         {
             result = -1;
@@ -55,7 +55,7 @@ int ServiceHandler<PEER_STREAM>::open( void* )
     return result;
 }
 
-} // namespace v_1_1
+} // namespace AcceptorConnector_1_0
 
 
-#endif /* FRAMEWORK_V_1_1_ServiceHandler_HPP_ */
+#endif /* FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_ServiceHandler_HPP_ */

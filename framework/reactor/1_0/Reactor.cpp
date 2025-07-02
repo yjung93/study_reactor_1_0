@@ -15,7 +15,7 @@
 
 #include "EventHandler.hpp"
 
-namespace v_1_1
+namespace Reactor_1_0
 {
 
 using namespace std;
@@ -375,4 +375,4 @@ void Reactor::dbgRepository( string title )
 
     }
 }
-}/* namespace v_1_1 */
+}/* namespace Reactor_1_0 */

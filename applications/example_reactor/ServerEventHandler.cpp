@@ -12,13 +12,12 @@
 #include <netinet/in.h>
 #include <unistd.h>
 
-
 using namespace std;
 
 namespace example_reactor
 {
 
-ServerEventHandler::ServerEventHandler( v_1_0::Reactor *reactor ) :
+ServerEventHandler::ServerEventHandler( Reactor_1_0::Reactor *reactor ) :
                 EventHandler( reactor )
 {
     cout << "ServerEventHandler::"
@@ -61,7 +60,7 @@ int ServerEventHandler::handleInput( int fd )
              << fd
              << endl;
         close( fd );
-        getReactor()->removeHandler( this );
+        getReactor()->removeHandler( this, ALL_EVENTS_MASK );
     }else
     {
         // Echo the message back to client

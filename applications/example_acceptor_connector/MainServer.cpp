@@ -5,16 +5,16 @@
  *      Author: yjung93
  */
 
-#include "applications/example_acceptor_connector/ExAcceptor.hpp"
+#include <applications/example_acceptor_connector/AcceptorImpl.hpp>
 #include <iostream>
 #include <thread>
 
-#include "framework/v_1_1/Reactor.hpp"
+#include "framework/reactor/1_0/Reactor.hpp"
 
 using namespace std;
 using namespace ex_acceptor_connector;
 
-void serverThreadFuncion( v_1_1::Reactor *reactor )
+void serverThreadFuncion( Reactor_1_0::Reactor *reactor )
 {
     cout << "serverThreadFuncion"
          << endl;
@@ -25,10 +25,10 @@ void serverThreadFuncion( v_1_1::Reactor *reactor )
 int main( int argc, char **argv )
 {
 
-    ExAcceptor acceptor( v_1_1::Reactor::getInstance() );
+    AcceptorImpl acceptor( Reactor_1_0::Reactor::getInstance() );
 
     std::thread serverThread( serverThreadFuncion,
-                              v_1_1::Reactor::getInstance() );
+                              Reactor_1_0::Reactor::getInstance() );
 
     // Wait for the thread to finish execution
     if ( serverThread.joinable() )
@@ -36,6 +36,6 @@ int main( int argc, char **argv )
         serverThread.join();
     }
 
-    v_1_1::Reactor::closeSingleton();
+    Reactor_1_0::Reactor::closeSingleton();
     return 0;
 }

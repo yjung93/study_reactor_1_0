@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include "InputHandler.hpp"
-#include "framework/v_1_1/Reactor.hpp"
+#include "framework/reactor/1_0/Reactor.hpp"
 
 using namespace std;
 
@@ -19,7 +19,7 @@ namespace ex_acceptor_connector
 {
 
 InputHandler::InputHandler() :
-                ServiceHandler( v_1_1::Reactor::getInstance() )
+                ServiceHandler( Reactor_1_0::Reactor::getInstance() )
 {
     cout << "InputHandler::"
          << __FUNCTION__

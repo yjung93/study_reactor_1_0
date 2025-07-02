@@ -5,16 +5,16 @@
  *      Author: yjung93
  */
 
-#ifndef FRAMEWORK_V_1_1_SockConnector_HPP_
-#define FRAMEWORK_V_1_1_SockConnector_HPP_
+#ifndef FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_SockConnector_HPP_
+#define FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_SockConnector_HPP_
 
 #include <arpa/inet.h>
 
-#include "framework/v_1_1/EventHandler.hpp"
-#include "framework/v_1_1/Reactor.hpp"
-#include "framework/v_1_1/SockStream.hpp"
+#include "framework/reactor/1_0/EventHandler.hpp"
+#include "framework/reactor/1_0/Reactor.hpp"
+#include "framework/acceptor_connector/1_0/SockStream.hpp"
 
-namespace v_1_1
+namespace AcceptorConnector_1_0
 {
 
 class SockConnector
@@ -22,7 +22,7 @@ class SockConnector
 public:
     typedef struct sockaddr_in PEER_ADDR;
 
-    SockConnector( v_1_1::Reactor *reactor = v_1_1::Reactor::getInstance() );
+    SockConnector( Reactor_1_0::Reactor *reactor = Reactor_1_0::Reactor::getInstance() );
     virtual ~SockConnector();
 
     int connect( SockStream &new_stream, const PEER_ADDR &remoteAddr, int reuse_addr =

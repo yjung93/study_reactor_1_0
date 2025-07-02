@@ -4,8 +4,8 @@
  *  Created on: Jan 14, 2025
  *      Author: yjung93
  */
-#ifndef FRAMEWORK_V_1_1_CONNECTOR_CPP_
-#define FRAMEWORK_V_1_1_CONNECTOR_CPP_
+#ifndef FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_CONNECTOR_CPP_
+#define FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_CONNECTOR_CPP_
 
 #include <arpa/inet.h>
 #include <iostream>
@@ -13,11 +13,11 @@
 
 #include "Connector.hpp"
 
-namespace v_1_1
+namespace AcceptorConnector_1_0
 {
 template<typename SVC_HANDLER, typename PEER_CONNECTOR>
-Connector<SVC_HANDLER, PEER_CONNECTOR>::Connector( Reactor *reactor, int flags ) :
-                EventHandler( reactor )
+Connector<SVC_HANDLER, PEER_CONNECTOR>::Connector( Reactor_1_0::Reactor *reactor, int flags ) :
+                Reactor_1_0::EventHandler( reactor )
 {
     cout << "Connector<SVC_HANDLER, PEER_CONNECTOR>::"
          << __FUNCTION__
@@ -36,7 +36,7 @@ Connector<SVC_HANDLER, PEER_CONNECTOR>::~Connector()
          << endl;
 }
 template<typename SVC_HANDLER, typename PEER_CONNECTOR>
-int Connector<SVC_HANDLER, PEER_CONNECTOR>::open( Reactor *reactor, int flags )
+int Connector<SVC_HANDLER, PEER_CONNECTOR>::open( Reactor_1_0::Reactor *reactor, int flags )
 {
     cout << "Connector<SVC_HANDLER, PEER_CONNECTOR>::"
          << __FUNCTION__
@@ -60,7 +60,7 @@ bool Connector<SVC_HANDLER, PEER_CONNECTOR>::close( SVC_HANDLER *&sh )
 }
 
 template<typename SVC_HANDLER, typename PEER_CONNECTOR>
-void Connector<SVC_HANDLER, PEER_CONNECTOR>::setReactor( Reactor *reactor )
+void Connector<SVC_HANDLER, PEER_CONNECTOR>::setReactor( Reactor_1_0::Reactor *reactor )
 {
     cout << "Connector<SVC_HANDLER, PEER_CONNECTOR>::"
          << __FUNCTION__
@@ -69,7 +69,7 @@ void Connector<SVC_HANDLER, PEER_CONNECTOR>::setReactor( Reactor *reactor )
     mReactor = reactor;
 }
 template<typename SVC_HANDLER, typename PEER_CONNECTOR>
-Reactor* Connector<SVC_HANDLER, PEER_CONNECTOR>::getReactor() const
+Reactor_1_0::Reactor* Connector<SVC_HANDLER, PEER_CONNECTOR>::getReactor() const
 {
     cout << "Connector<SVC_HANDLER, PEER_CONNECTOR>::"
          << __FUNCTION__
@@ -215,7 +215,7 @@ int Connector<SVC_HANDLER, PEER_CONNECTOR>::nonblockingConnect( SVC_HANDLER *svc
     {
         nbch = new NBCH( *this, svcHandler );
         result = getReactor()->registerHandler( nbch,
-                                                EventHandler::CONNECT_MASK );
+                                                Reactor_1_0::EventHandler::CONNECT_MASK );
     }
 
     // TBD : register timer, once it is available
@@ -379,6 +379,6 @@ bool NonBlockingConnectHandler<SVC_HANDLER>::close( SVC_HANDLER *&sh )
     return result;
 }
 
-} /* namespace v_1_1 */
+} /* namespace AcceptorConnector_1_0 */
 
-#endif /* FRAMEWORK_V_1_1_CONNECTOR_CPP_ */
+#endif /* FRAMEWORK_ACCEPTOR_CONNECTOR_1_0_CONNECTOR_CPP_ */

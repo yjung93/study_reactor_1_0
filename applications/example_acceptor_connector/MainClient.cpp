@@ -1,14 +1,14 @@
-#include "ExConnector.hpp"
+#include <applications/example_acceptor_connector/ConnectorImpl.hpp>
 #include <iostream>
 #include <thread>
 
-#include "framework/v_1_1/Reactor.hpp"
+#include "framework/reactor/1_0/Reactor.hpp"
 #include "applications/example_acceptor_connector/Client.hpp"
 
 using namespace std;
 using namespace ex_acceptor_connector;
 
-void clientThreadFuncion( v_1_1::Reactor *reactor )
+void clientThreadFuncion( Reactor_1_0::Reactor *reactor )
 {
     cout << "clientThreadFuncion"
          << endl;
@@ -18,11 +18,8 @@ void clientThreadFuncion( v_1_1::Reactor *reactor )
 
 int main()
 {
-
-
-
     std::thread clientThread( clientThreadFuncion,
-                              v_1_1::Reactor::getInstance() );
+                              Reactor_1_0::Reactor::getInstance() );
 
     Client client;
     client.initialize();
@@ -56,7 +53,7 @@ int main()
         clientThread.join();
     }
 
-    v_1_1::Reactor::closeSingleton();
+    Reactor_1_0::Reactor::closeSingleton();
     return 0;
 }
 

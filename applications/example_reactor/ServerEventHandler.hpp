@@ -8,15 +8,15 @@
 #ifndef APPLICATIONS_EXAMPLE_1_ServerEventHandler_HPP_
 #define APPLICATIONS_EXAMPLE_1_ServerEventHandler_HPP_
 
-#include "framework/v_1_0/EventHandler.hpp"
-#include "framework/v_1_0/Reactor.hpp"
+#include "framework/reactor/1_0/EventHandler.hpp"
+#include "framework/reactor/1_0/Reactor.hpp"
 
 
 namespace example_reactor {
 
-class ServerEventHandler: public v_1_0::EventHandler {
+class ServerEventHandler: public Reactor_1_0::EventHandler {
 public:
-	ServerEventHandler(v_1_0::Reactor *reactor = v_1_0::Reactor::getInstance());
+	ServerEventHandler(Reactor_1_0::Reactor *reactor = Reactor_1_0::Reactor::getInstance());
 	virtual ~ServerEventHandler();
 
 	void open();
