@@ -118,7 +118,7 @@ int Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::handleInput( int fd )
 
     acceptSvcHandler( svcHandler );
 
-    activateSvcHandler( svcHandler );
+    activateSvcHandler( svcHandler ); 
 
     return 0;
 }
