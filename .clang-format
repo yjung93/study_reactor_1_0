@@ -1,0 +1,104 @@
+# Base formatting style to inherit from (LLVM, Google, Chromium, Mozilla, WebKit)
+BasedOnStyle: LLVM
+
+# Number of spaces for each indentation level
+IndentWidth: 4
+
+# Number of spaces per tab character
+TabWidth: 4
+
+# Never use tabs, always use spaces for indentation
+UseTab: Never
+
+# Brace breaking style: Allman puts braces on new lines
+BreakBeforeBraces: Allman
+
+# Only allow short functions on single line if they are inline
+AllowShortFunctionsOnASingleLine: InlineOnly
+
+# Maximum line length before breaking (set high to preserve existing breaks)
+ColumnLimit: 0
+
+# Don't keep empty lines at the start of code blocks
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# Don't allow short blocks (if, while, etc.) on a single line
+AllowShortBlocksOnASingleLine: false
+
+# Indent case labels in switch statements
+IndentCaseLabels: true
+
+# Don't indent preprocessor directives (#include, #define, etc.)
+IndentPPDirectives: None
+
+# Add space before parentheses only for control statements (if, for, while)
+SpaceBeforeParens: ControlStatements
+
+# Add spaces inside parentheses: func( param ) instead of func(param)
+SpacesInParentheses: true 
+
+# Don't add spaces inside square brackets: array[index] not array[ index ]
+SpacesInSquareBrackets: false
+
+# Don't add spaces inside angle brackets: vector<int> not vector< int >
+SpacesInAngles: false
+
+# Add space after C-style casts: (int) x instead of (int)x
+SpaceAfterCStyleCast: true
+
+# Use traditional C++98 brace list style instead of C++11 uniform initialization
+Cpp11BracedListStyle: false
+
+# Align operands in multi-line expressions
+AlignOperands: Align
+
+# Don't align consecutive assignment operators
+AlignConsecutiveAssignments: false
+
+# Don't align consecutive variable declarations
+AlignConsecutiveDeclarations: false
+
+# Don't align trailing comments
+AlignTrailingComments: false
+
+# Allow all function parameters to be on the next line if they don't fit
+AllowAllParametersOfDeclarationOnNextLine: true
+
+# Don't pack multiple function call arguments on the same line (preserves existing breaks)
+BinPackArguments: false
+
+# Don't pack function declaration parameters on the same line (preserves existing breaks)
+BinPackParameters: false
+
+# Don't break before binary operators (&&, ||, +, -, etc.)
+BreakBeforeBinaryOperators: None
+
+# Break before ternary operators (condition ? true_val : false_val)
+BreakBeforeTernaryOperators: true
+
+# Put constructor initializers all on one line or one per line
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+
+# Align function arguments with the opening bracket
+AlignAfterOpenBracket: Align
+
+# Number of spaces for continuation lines (when wrapping)
+ContinuationIndentWidth: 4
+
+# Don't indent wrapped function names
+IndentWrappedFunctionNames: false
+
+# Don't reformat comments to fit column limit
+ReflowComments: false
+
+# Don't sort #include statements
+SortIncludes: false
+
+# Preserve existing #include block organization
+IncludeBlocks: Preserve
+
+# Don't allow all function call arguments on the next line
+AllowAllArgumentsOnNextLine: false
+
+# Language being formatted
+Language: Cpp

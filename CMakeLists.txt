@@ -24,6 +24,9 @@ set (framework_v_1_1_lib
 set (lib_framework_reactor_1_0
      framework/reactor/1_0/EventHandler.cpp 
      framework/reactor/1_0/Reactor.cpp )
+
+set (lib_framework_task_1_0
+     framework/task/1_0/Task.cpp )
      
 set (lib_framework_acceptor_connector_1_0
      framework/acceptor_connector/1_0/Acceptor.cpp 
@@ -52,7 +55,17 @@ set (ex_acc_con_client_lib
      applications/example_acceptor_connector/ConnectorImpl.cpp
      applications/example_acceptor_connector/OutputHandler.cpp 
      applications/example_acceptor_connector/Client.cpp)
+
+set (ex_half_sync_half_async_client_lib 
+     applications/example_half-sync_half-async/MainClient.cpp )
+
+set (ex_half_sync_half_async_server_lib
+     applications/example_half-sync_half-async/MainServer.cpp
+     applications/example_half-sync_half-async/HalfAsyncHandler.cpp
+     applications/example_half-sync_half-async/HalfSyncHandler.cpp
+     applications/example_half-sync_half-async/Acceptor.cpp)
          
+
 add_executable(example_reactor_client
   ${example_1_client_source}
 )
@@ -72,6 +85,16 @@ add_executable(ex_acc_con_server_1
   ${ex_acc_con_server_lib}
   ${lib_framework_acceptor_connector_1_0}
   ${lib_framework_reactor_1_0}
+)
+
+add_executable(ex_half_sync_half_async_server
+  ${ex_half_sync_half_async_server_lib}
+  ${lib_framework_task_1_0}
+  ${lib_framework_reactor_1_0}
+)
+
+add_executable(ex_half_sync_half_async_client
+  ${ex_half_sync_half_async_client_lib}
 )
 
 

@@ -40,7 +40,7 @@ public:
     int registerHandler( EventHandler *event_handler, ReactorMask mask );
     int removeHandler( EventHandler *event_handler, ReactorMask mask );
     void dbgRepository( std::string title );
-
+ 
 protected:
 
 
