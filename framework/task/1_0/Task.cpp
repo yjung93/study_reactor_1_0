@@ -65,6 +65,16 @@ int Task::activate()
 
 int Task::putQ( const string &message )
 {
+    thread::id this_id = this_thread::get_id();
+
+    cout << "Task::"
+         << __FUNCTION__
+         << " threadId="
+         << this_id
+         << ": message="
+         << message
+         << endl;
+
     lock_guard<mutex> guard( mQueueMutex );
 
     if ( mStopRequested )
@@ -95,6 +105,16 @@ int Task::getQ( string &message )
     else
     {
         message = mMessageQueue.front();
+
+        thread::id this_id = this_thread::get_id();
+        cout << "Task::"
+             << __FUNCTION__
+             << " threadId="
+             << this_id
+             << ": message="
+             << message
+             << endl;
+
         mMessageQueue.erase( mMessageQueue.begin() );
     }
     return returnCode;

@@ -1,6 +1,6 @@
 
 #include "HalfSyncHandler.hpp"
-#include <iostream> 
+#include <iostream>
 #include <sys/socket.h>
 
 using namespace std;
@@ -35,13 +35,18 @@ int HalfSyncHandler::svc()
     string message;
     while ( getQ( message ) == 0 )
     {
-        cout << "Processing message in HalfSyncHandler: "
-             << message
-             << endl;
-
-        string messageToSend = "Echo - " + message;
-        send( mSocketFd, messageToSend.c_str(), messageToSend.size(), 0 );
+        processMessage( message );
     }
 
     return 0;
+}
+
+void HalfSyncHandler::processMessage( const std::string &message )
+{
+    cout << "HalfSyncHandler::"
+         << __FUNCTION__
+         << endl;
+
+    string messageToSend = "Echo - " + message;
+    send( mSocketFd, messageToSend.c_str(), messageToSend.size(), 0 );
 }

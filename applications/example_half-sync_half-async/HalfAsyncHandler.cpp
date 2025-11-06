@@ -6,6 +6,7 @@
  */
 
 #include "applications/example_half-sync_half-async/HalfAsyncHandler.hpp"
+#include "applications/example_half-sync_half-async/Acceptor.hpp"
 #include <cstring>
 #include <iostream>
 #include <sys/socket.h>
@@ -17,8 +18,9 @@ using namespace std;
 namespace ExHalfSyncAsync
 {
 
-HalfAsyncHandler::HalfAsyncHandler( Reactor_1_0::Reactor *reactor )
-    : EventHandler( reactor )
+HalfAsyncHandler::HalfAsyncHandler( Reactor_1_0::Reactor *reactor, Acceptor &owner )
+    : EventHandler( reactor ),
+      mOwner( &owner )
 {
     cout << "HalfAsyncHandler::"
          << __FUNCTION__
@@ -30,11 +32,6 @@ HalfAsyncHandler::~HalfAsyncHandler()
     cout << "HalfAsyncHandler::"
          << __FUNCTION__
          << endl;
-
-    if ( mHalfSyncHandler != nullptr )
-    {
-        delete mHalfSyncHandler;
-    }
 }
 
 void HalfAsyncHandler::open()
@@ -45,7 +42,7 @@ void HalfAsyncHandler::open()
     getReactor()->registerHandler( this, EventHandler::READ_MASK );
 
     // Initialize HalfSyncHandler
-    mHalfSyncHandler = new HalfSyncHandler( getHandle() );
+    mHalfSyncHandler.reset( new HalfSyncHandler( getHandle() ) );
     mHalfSyncHandler->open();
 }
 
@@ -60,24 +57,34 @@ int HalfAsyncHandler::handleInput( int fd )
     char buffer[bufferSize] = { 0 };
 
     int valread = read( fd, buffer, bufferSize );
-    if ( valread == 0 )
+    if ( valread <= 0 )
     {
-        // Client disconnected
-        cout << "Client disconnected, socket FD: "
-             << fd
-             << endl;
+        if ( valread == 0 )
+        {
+            cout << "Client disconnected, socket FD: "
+                 << fd
+                 << endl;
+        }
+        else
+        {
+            perror( "read failed" );
+        }
+
         close( fd );
         getReactor()->removeHandler( this, ALL_EVENTS_MASK );
+        if ( mOwner != nullptr )
+        {
+            mOwner->removeConnection( fd );
+        }
+        // return here immediately to avoid further processing since this object is likely destroyed.
+        return 0;
     }
-    else
-    {
-        // Echo the message back to client
-        cout << "Received message: "
-             << buffer
-             << endl;
 
-        mHalfSyncHandler->putQ( string( buffer ) );
-    }
+    cout << "Received message: "
+         << buffer
+         << endl;
+
+    mHalfSyncHandler->putQ( string( buffer, static_cast<size_t>( valread ) ) );
 
     return 0;
 }

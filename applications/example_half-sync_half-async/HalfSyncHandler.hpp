@@ -11,8 +11,8 @@ class HalfSyncHandler : public Task_1_0::Task
     int svc() override;
     int open( void *args = 0 ) override;
 
-
   private:
+    void processMessage( const std::string &message );
     int mSocketFd;
 };
 

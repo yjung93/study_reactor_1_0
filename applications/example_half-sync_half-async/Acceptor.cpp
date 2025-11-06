@@ -91,14 +91,28 @@ int Acceptor::handleInput( int fd )
         exit( EXIT_FAILURE );
     }
 
-    HalfAsyncHandler *HalfAsyncHandler = new ExHalfSyncAsync::HalfAsyncHandler( getReactor() );
-    HalfAsyncHandler->setHandle( newSocketFd );
-    HalfAsyncHandler->open();
+    std::unique_ptr<ExHalfSyncAsync::HalfAsyncHandler> handler( new ExHalfSyncAsync::HalfAsyncHandler( getReactor(), *this ) );
+    handler->setHandle( newSocketFd );
+    handler->open();
+    
+    mConnections.emplace( newSocketFd, std::move( handler ) );
 
     std::cout << "New connection established, socket FD: "
               << newSocketFd
               << std::endl;
     return 0;
+}
+
+void Acceptor::removeConnection( int fd )
+{
+    auto it = mConnections.find( fd );
+    if ( it != mConnections.end() )
+    {
+        mConnections.erase( it );
+        std::cout << "Connection cleaned up, socket FD: "
+                  << fd
+                  << std::endl;
+    }
 }
 
 } /* namespace  ExHalfSyncAsync */

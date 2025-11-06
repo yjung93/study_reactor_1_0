@@ -9,24 +9,29 @@
 #define APPLICATIONS_EXAMPLE_REACTOR_ACCEPTOR_HPP_
 
 #include <arpa/inet.h>
+#include <memory>
+#include <unordered_map>
 
 #include "framework/reactor/1_0/EventHandler.hpp"
 #include "framework/reactor/1_0/Reactor.hpp"
+#include "applications/example_half-sync_half-async/HalfAsyncHandler.hpp"
 
-namespace  ExHalfSyncAsync
+namespace ExHalfSyncAsync
 {
 
-class Acceptor: public Reactor_1_0::EventHandler
+class Acceptor : public Reactor_1_0::EventHandler
 {
-public:
+  public:
     Acceptor( Reactor_1_0::Reactor *reactor = Reactor_1_0::Reactor::getInstance() );
     virtual ~Acceptor();
 
     void open();
     int handleInput( int fd = INVALID_HANDLE ) override;
+    void removeConnection( int fd );
 
-private:
+  private:
     struct sockaddr_in mAddress;
+    std::unordered_map<int, std::unique_ptr<HalfAsyncHandler>> mConnections;
 };
 
 } /* namespace  ExHalfSyncAsync */
