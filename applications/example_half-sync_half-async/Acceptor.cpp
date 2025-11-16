@@ -5,7 +5,7 @@
  *      Author: yjung93
  */
 #include "applications/example_half-sync_half-async/Acceptor.hpp"
-#include "applications/example_half-sync_half-async/HalfAsyncHandler.hpp"
+#include "applications/example_half-sync_half-async/AsyncService.hpp"
 #include <arpa/inet.h>
 #include <iostream>
 #include <unistd.h>
@@ -91,7 +91,7 @@ int Acceptor::handleInput( int fd )
         exit( EXIT_FAILURE );
     }
 
-    std::unique_ptr<ExHalfSyncAsync::HalfAsyncHandler> handler( new ExHalfSyncAsync::HalfAsyncHandler( getReactor(), *this ) );
+    std::unique_ptr<ExHalfSyncAsync::AsyncService> handler( new ExHalfSyncAsync::AsyncService( getReactor(), *this ) );
     handler->setHandle( newSocketFd );
     handler->open();
     

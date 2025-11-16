@@ -14,7 +14,7 @@
 
 #include "framework/reactor/1_0/EventHandler.hpp"
 #include "framework/reactor/1_0/Reactor.hpp"
-#include "applications/example_half-sync_half-async/HalfAsyncHandler.hpp"
+#include "applications/example_half-sync_half-async/AsyncService.hpp"
 
 namespace ExHalfSyncAsync
 {
@@ -31,7 +31,7 @@ class Acceptor : public Reactor_1_0::EventHandler
 
   private:
     struct sockaddr_in mAddress;
-    std::unordered_map<int, std::unique_ptr<HalfAsyncHandler>> mConnections;
+    std::unordered_map<int, std::unique_ptr<AsyncService>> mConnections;
 };
 
 } /* namespace  ExHalfSyncAsync */

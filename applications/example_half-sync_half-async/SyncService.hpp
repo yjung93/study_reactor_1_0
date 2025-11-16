@@ -3,11 +3,11 @@
 
 #include "framework/task/1_0/Task.hpp"
 
-class HalfSyncHandler : public Task_1_0::Task
+class SyncService : public Task_1_0::Task
 {
   public:
-    HalfSyncHandler( int socketFd );
-    virtual ~HalfSyncHandler();
+    SyncService( int socketFd );
+    virtual ~SyncService();
     int svc() override;
     int open( void *args = 0 ) override;
 

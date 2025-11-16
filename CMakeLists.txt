@@ -61,8 +61,8 @@ set (ex_half_sync_half_async_client_lib
 
 set (ex_half_sync_half_async_server_lib
      applications/example_half-sync_half-async/MainServer.cpp
-     applications/example_half-sync_half-async/HalfAsyncHandler.cpp
-     applications/example_half-sync_half-async/HalfSyncHandler.cpp
+     applications/example_half-sync_half-async/AsyncService.cpp
+     applications/example_half-sync_half-async/SyncService.cpp
      applications/example_half-sync_half-async/Acceptor.cpp)
          
 

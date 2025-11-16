@@ -1,11 +1,11 @@
 /*
- * HalfAsyncHandler.cpp
+ * AsyncService.cpp
  *
  *  Created on: Jan 23, 2024
  *      Author: yjung93
  */
 
-#include "applications/example_half-sync_half-async/HalfAsyncHandler.hpp"
+#include "applications/example_half-sync_half-async/AsyncService.hpp"
 #include "applications/example_half-sync_half-async/Acceptor.hpp"
 #include <cstring>
 #include <iostream>
@@ -18,37 +18,37 @@ using namespace std;
 namespace ExHalfSyncAsync
 {
 
-HalfAsyncHandler::HalfAsyncHandler( Reactor_1_0::Reactor *reactor, Acceptor &owner )
+AsyncService::AsyncService( Reactor_1_0::Reactor *reactor, Acceptor &owner )
     : EventHandler( reactor ),
       mOwner( &owner )
 {
-    cout << "HalfAsyncHandler::"
+    cout << "AsyncService::"
          << __FUNCTION__
          << endl;
 }
 
-HalfAsyncHandler::~HalfAsyncHandler()
+AsyncService::~AsyncService()
 {
-    cout << "HalfAsyncHandler::"
+    cout << "AsyncService::"
          << __FUNCTION__
          << endl;
 }
 
-void HalfAsyncHandler::open()
+void AsyncService::open()
 {
-    cout << "HalfAsyncHandler::"
+    cout << "AsyncService::"
          << __FUNCTION__
          << endl;
     getReactor()->registerHandler( this, EventHandler::READ_MASK );
 
-    // Initialize HalfSyncHandler
-    mHalfSyncHandler.reset( new HalfSyncHandler( getHandle() ) );
-    mHalfSyncHandler->open();
+    // Initialize SyncService
+    mSyncService.reset( new SyncService( getHandle() ) );
+    mSyncService->open();
 }
 
-int HalfAsyncHandler::handleInput( int fd )
+int AsyncService::handleInput( int fd )
 {
-    cout << "HalfAsyncHandler::"
+    cout << "AsyncService::"
          << __FUNCTION__
          << endl;
 
@@ -84,7 +84,7 @@ int HalfAsyncHandler::handleInput( int fd )
          << buffer
          << endl;
 
-    mHalfSyncHandler->putQ( string( buffer, static_cast<size_t>( valread ) ) );
+    mSyncService->putQ( string( buffer, static_cast<size_t>( valread ) ) );
 
     return 0;
 }

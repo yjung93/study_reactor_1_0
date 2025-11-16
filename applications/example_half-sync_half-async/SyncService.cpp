@@ -1,34 +1,34 @@
 
-#include "HalfSyncHandler.hpp"
+#include "SyncService.hpp"
 #include <iostream>
 #include <sys/socket.h>
 
 using namespace std;
-HalfSyncHandler::HalfSyncHandler( int socketFd )
+SyncService::SyncService( int socketFd )
     : mSocketFd( socketFd )
 {
-    cout << "HalfSyncHandler::"
+    cout << "SyncService::"
          << __FUNCTION__
          << endl;
 }
-HalfSyncHandler::~HalfSyncHandler()
+SyncService::~SyncService()
 {
-    cout << "HalfSyncHandler::"
+    cout << "SyncService::"
          << __FUNCTION__
          << endl;
 }
 
-int HalfSyncHandler::open( void *args )
+int SyncService::open( void *args )
 {
-    cout << "HalfSyncHandler::"
+    cout << "SyncService::"
          << __FUNCTION__
          << endl;
 
     return activate();
 }
-int HalfSyncHandler::svc()
+int SyncService::svc()
 {
-    cout << "HalfSyncHandler::"
+    cout << "SyncService::"
          << __FUNCTION__
          << endl;
 
@@ -41,9 +41,9 @@ int HalfSyncHandler::svc()
     return 0;
 }
 
-void HalfSyncHandler::processMessage( const std::string &message )
+void SyncService::processMessage( const std::string &message )
 {
-    cout << "HalfSyncHandler::"
+    cout << "SyncService::"
          << __FUNCTION__
          << endl;
 
