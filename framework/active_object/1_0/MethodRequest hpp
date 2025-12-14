@@ -1,0 +1,4 @@
+
+
+// for splitting the template class definition into .cpp
+#include "framework/active_object/1_0/MethodRequest.cpp"

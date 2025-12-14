@@ -1,0 +1,10 @@
+#ifndef APPLICATIONS_EXAMPLE_ACTIVE_OBJECT_ActObjMethodRequests_HPP_
+#define APPLICATIONS_EXAMPLE_ACTIVE_OBJECT_ActObjMethodRequests_HPP_
+
+#include "ActObjMethodRequests.hpp"
+
+namespace ExActiveObject
+{
+}
+
+#endif //#define APPLICATIONS_EXAMPLE_ACTIVE_OBJECT_ActObjMethodRequests_HPP_
