@@ -8,11 +8,13 @@ using namespace std;
 namespace ExActiveObject
 {
 
-ActObjScheduler::ActObjScheduler(  )
+ActObjScheduler::ActObjScheduler()
 {
     cout << "ActObjScheduler::"
          << __FUNCTION__
          << endl;
+         
+    activate();
 }
 ActObjScheduler::~ActObjScheduler()
 {
@@ -21,37 +23,33 @@ ActObjScheduler::~ActObjScheduler()
          << endl;
 }
 
-int ActObjScheduler::open( void *args )
-{
-    cout << "ActObjScheduler::"
-         << __FUNCTION__
-         << endl;
-
-    return activate();
-}
 int ActObjScheduler::svc()
 {
     cout << "ActObjScheduler::"
          << __FUNCTION__
          << endl;
 
-    string message;
-    while ( getQ( message ) == 0 )
+    while ( true )
     {
-        processMessage( message );
-    }
+        // Dequeue the next method object
+        std::unique_ptr<ActiveObject_1_0::MethodRequest> request( this->mActivationQueue.dequeue() );
 
+        // Invoke the method request.
+        if ( request->call() == -1 )
+        {
+            break;
+        }
+    }
     return 0;
 }
 
-void ActObjScheduler::processMessage( const std::string &message )
+int ActObjScheduler::enqueue( ActiveObject_1_0::MethodRequest *request )
 {
     cout << "ActObjScheduler::"
          << __FUNCTION__
          << endl;
 
-    string messageToSend = "Echo - " + message;
-    // send( mSocketFd, messageToSend.c_str(), messageToSend.size(), 0 );
+    return mActivationQueue.enqueue( request );
 }
 
-}//namespace ExActiveObject
+} //namespace ExActiveObject

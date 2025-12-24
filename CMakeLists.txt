@@ -31,7 +31,8 @@ set (lib_framework_task_1_0
      
 set (lib_framework_active_object_1_0
      framework/active_object/1_0/Future.cpp
-     framework/active_object/1_0/MethodRequest.cpp )
+     framework/active_object/1_0/MethodRequest.cpp 
+     framework/active_object/1_0/ActivationQueue.cpp)
      
 set (lib_framework_acceptor_connector_1_0
      framework/acceptor_connector/1_0/Acceptor.cpp 
@@ -120,7 +121,10 @@ add_executable(ex_active_object_server
   ${ex_active_object_server_lib}
   ${lib_framework_task_1_0}
   ${lib_framework_reactor_1_0}
+  ${lib_framework_active_object_1_0}
 )
+
+ 
 
 add_executable(ex_active_object_client
   ${ex_active_object_client_lib}

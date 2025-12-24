@@ -42,11 +42,11 @@ int FutureRep<T>::set( const T &r )
 }
 
 template <typename T>
-int FutureRep<T>::get( T &value, unsigned long int timeout ) const
+int FutureRep<T>::get( T &value, unsigned long int timeout ) 
 {
     if ( this->mValue == nullptr )
     {
-        unique_lock<std::mutex> lock( mValueReadyMutex );
+        unique_lock<mutex> lock( this->mValueReadyMutex );
         mValueReady.wait_for( lock,
                               chrono::seconds( timeout ),
                               [this]
@@ -77,26 +77,26 @@ Future<T>::~Future()
 template <typename T>
 int Future<T>::cancle()
 {
-    mRep = make_shared<FutureRep<T>>();
+    this->mRep = make_shared<FutureRep<T>>();
     return 0;
 }
 
 template <typename T>
 int Future<T>::set( const T &r )
 {
-    return this->mRef->set( r );
+    return this->mRep->set( r );
 }
 
 template <typename T>
-int Future<T>::get( T &value, unsigned long int timeout ) const
+int Future<T>::get( T &value, unsigned long int timeout )
 {
-    return this->mRef->get( value, timeout );
+    return this->mRep->get( value, timeout );
 }
 
 template <typename T>
 int Future<T>::ready() const
 {
-    return this->mRef->ready();
+    return this->mRep->ready();
 }
 } //namespace ActiveObject_1_0
 

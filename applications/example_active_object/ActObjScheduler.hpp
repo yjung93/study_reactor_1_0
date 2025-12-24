@@ -2,6 +2,7 @@
 #define APPLICATIONS_EXAMPLE_ACTIVE_OBJECT_ActObjScheduler_HPP_
 
 #include "framework/task/1_0/Task.hpp"
+#include "framework/active_object/1_0/ActivationQueue.hpp"
 
 namespace ExActiveObject
 {
@@ -9,14 +10,14 @@ namespace ExActiveObject
 class ActObjScheduler : public Task_1_0::Task
 {
   public:
-    ActObjScheduler(  );
+    ActObjScheduler();
     virtual ~ActObjScheduler();
     int svc() override;
-    int open( void *args = 0 ) override;
+    int enqueue( ActiveObject_1_0::MethodRequest *request );
 
   private:
-    void processMessage( const std::string &message );
+    ActiveObject_1_0::ActivationQueue mActivationQueue;
 };
-}//namespace ExActiveObject
+} //namespace ExActiveObject
 
 #endif /* APPLICATIONS_EXAMPLE_ActObjScheduler_HPP_ */

@@ -6,16 +6,15 @@
 using namespace std;
 namespace ExActiveObject
 {
-class ActObjServant : public Task_1_0::Task
+class ActObjServant
 {
   public:
     ActObjServant();
-    virtual ~ActObjServant();
-    int svc() override;
-    int open( void *args = 0 ) override;
+    virtual ~ActObjServant() = default;
+
+    string RequestGetReturnMessage( const string &message );
 
   private:
-    void processMessage( const std::string &message );
 };
 
 } //namespace ExActiveObject

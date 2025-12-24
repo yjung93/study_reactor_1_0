@@ -50,7 +50,10 @@ void ActObjClient::processMessage( const std::string &message )
          << __FUNCTION__
          << endl;
 
-    string messageToSend = mServantProxy.requestGetReturnMessageSync( message );
+    ActiveObject_1_0::Future<string> result = mServantProxy.requestGetReturnMessageSync( message );
+
+    string messageToSend;
+    result.get( messageToSend, 2000 );
     send( mSocketFd, messageToSend.c_str(), messageToSend.size(), 0 );
 }
 } // namespace ExActiveObject

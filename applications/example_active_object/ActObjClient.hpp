@@ -4,6 +4,8 @@
 #include "framework/task/1_0/Task.hpp"
 #include "ActObjServantProxy.hpp"
 
+using namespace std;
+
 namespace ExActiveObject
 {
 class ActObjClient : public Task_1_0::Task
@@ -20,5 +22,5 @@ class ActObjClient : public Task_1_0::Task
 
     ActObjServantProxy mServantProxy;
 };
-}
+} // namespace ExActiveObject
 #endif /* APPLICATIONS_EXAMPLE_ActObjClient_HPP_ */

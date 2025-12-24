@@ -1,11 +1,12 @@
 
-#ifndef FRAMEWORK_ACTIVE_OBJECT_1_0_FUTUR_HPP_
-#define FRAMEWORK_ACTIVE_OBJECT_1_0_FUTUR_HPP_
+#ifndef FRAMEWORK_ACTIVE_OBJECT_1_0_FUTURE_HPP_
+#define FRAMEWORK_ACTIVE_OBJECT_1_0_FUTURE_HPP_
 
 #include <mutex>
 #include <condition_variable>
 
 using namespace std;
+
 namespace ActiveObject_1_0
 {
 
@@ -20,10 +21,13 @@ class FutureRep
     friend class Future<T>;
 
   public:
+    FutureRep();
+    ~FutureRep();
+
     int cancle();
     int set( const T &r, Future<T> &caller );
     int set( const T &r );
-    int get( T &value, unsigned long int timeout ) const;
+    int get( T &value, unsigned long int timeout );
 
     int ready() const;
 
@@ -32,10 +36,7 @@ class FutureRep
     T *mValue;
 
   private:
-    FutureRep();
-
   protected:
-    ~FutureRep();
 };
 
 template <typename T>
@@ -47,7 +48,7 @@ class Future
 
     int cancle();
     int set( const T &r );
-    int get( T &value, unsigned long int timeout ) const;
+    int get( T &value, unsigned long int timeout );
 
     int ready() const;
 

@@ -2,6 +2,8 @@
 #include "ActObjServant.hpp"
 #include <iostream>
 #include <sys/socket.h>
+#include <chrono>
+#include <thread>
 
 using namespace std;
 
@@ -13,44 +15,25 @@ ActObjServant::ActObjServant()
          << __FUNCTION__
          << endl;
 }
-ActObjServant::~ActObjServant()
+
+string ActObjServant::RequestGetReturnMessage( const string &message )
 {
     cout << "ActObjServant::"
-         << __FUNCTION__
+         << __FUNCTION__ << ": "
+         << " message= "
+         << message
          << endl;
-}
 
-int ActObjServant::open( void *args )
-{
+    string result = "Echo - " + message;
+
+    this_thread::sleep_for( std::chrono::milliseconds( 2000 ) );
+
     cout << "ActObjServant::"
-         << __FUNCTION__
+         << __FUNCTION__ << ": "
+         << "process completed, result= "
+         << result
          << endl;
 
-    return activate();
+    return result;
 }
-int ActObjServant::svc()
-{
-    cout << "ActObjServant::"
-         << __FUNCTION__
-         << endl;
-
-    string message;
-    while ( getQ( message ) == 0 )
-    {
-        processMessage( message );
-    }
-
-    return 0;
-}
-
-void ActObjServant::processMessage( const std::string &message )
-{
-    cout << "ActObjServant::"
-         << __FUNCTION__
-         << endl;
-
-    string messageToSend = "Echo - " + message;
-    // send( mSocketFd, messageToSend.c_str(), messageToSend.size(), 0 );
-}
-
 } // namespace ExActiveObject
