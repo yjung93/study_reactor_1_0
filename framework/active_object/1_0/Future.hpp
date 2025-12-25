@@ -4,6 +4,7 @@
 
 #include <mutex>
 #include <condition_variable>
+#include <set>
 
 using namespace std;
 
@@ -16,6 +17,18 @@ template <typename T>
 class FutureRep;
 
 template <typename T>
+class FutureObserver
+{
+  public:
+    virtual ~FutureObserver();
+
+    virtual void update( const Future<T> &future ) = 0;
+
+  protected:
+    FutureObserver();
+};
+
+template <typename T>
 class FutureRep
 {
     friend class Future<T>;
@@ -26,13 +39,16 @@ class FutureRep
 
     int cancle();
     int set( const T &r, Future<T> &caller );
-    int set( const T &r );
     int get( T &value, unsigned long int timeout );
+    int attach( FutureObserver<T> *observer, Future<T> &caller );
+    int detach( FutureObserver<T> *observer );
 
     int ready() const;
 
-    mutex mValueReadyMutex;
-    condition_variable mValueReady;
+    ::set<FutureObserver<T> *> mObserverCollection;
+
+    mutable mutex mValueReadyMutex;
+    mutable condition_variable mValueReady;
     T *mValue;
 
   private:
@@ -48,9 +64,11 @@ class Future
 
     int cancle();
     int set( const T &r );
-    int get( T &value, unsigned long int timeout );
+    int get( T &value, unsigned long int timeout = 0 ) const;
 
     int ready() const;
+    int attach( FutureObserver<T> *observer );
+    int detach( FutureObserver<T> *observer );
 
   private:
     shared_ptr<FutureRep<T>> mRep;

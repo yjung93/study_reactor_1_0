@@ -26,7 +26,7 @@ string ActObjServant::RequestGetReturnMessage( const string &message )
 
     string result = "Echo - " + message;
 
-    this_thread::sleep_for( std::chrono::milliseconds( 2000 ) );
+    this_thread::sleep_for( std::chrono::milliseconds( 1000 ) ); // simulate work load
 
     cout << "ActObjServant::"
          << __FUNCTION__ << ": "

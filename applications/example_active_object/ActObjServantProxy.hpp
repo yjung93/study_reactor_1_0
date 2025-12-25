@@ -16,7 +16,7 @@ class ActObjServantProxy
   public:
     ActObjServantProxy();
     ~ActObjServantProxy();
-    ActiveObject_1_0::Future<string> requestGetReturnMessageSync( const string &message );
+    ActiveObject_1_0::Future<string> requestGetReturnMessage( const string &message );
 
   private:
     ActObjScheduler mScheduler;

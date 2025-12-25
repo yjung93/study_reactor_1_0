@@ -83,7 +83,8 @@ set (ex_active_object_server_lib
      applications/example_active_object/ActObjMethodRequests.cpp
      applications/example_active_object/ActObjScheduler.cpp
      applications/example_active_object/ActObjServantProxy.cpp
-     applications/example_active_object/ActObjServant.cpp)
+     applications/example_active_object/ActObjServant.cpp
+     applications/example_active_object/ActObjMethodCallback.cpp)
      
 
 add_executable(example_reactor_client

@@ -14,7 +14,7 @@ ActObjServantProxy::~ActObjServantProxy()
 {
 }
 
-ActiveObject_1_0::Future<string> ActObjServantProxy::requestGetReturnMessageSync( const string &message )
+ActiveObject_1_0::Future<string> ActObjServantProxy::requestGetReturnMessage( const string &message )
 {
     cout << "ActObjServantProxy::"
          << __FUNCTION__

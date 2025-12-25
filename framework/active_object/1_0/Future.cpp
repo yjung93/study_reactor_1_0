@@ -3,9 +3,21 @@
 #define FRAMEWORK_ACTIVE_OBJECT_1_0_FUTURE_CPP_
 
 #include "Future.hpp"
+#include <ostream>
+#include <iostream>
 
 namespace ActiveObject_1_0
 {
+
+template <typename T>
+FutureObserver<T>::FutureObserver()
+{
+}
+
+template <typename T>
+FutureObserver<T>::~FutureObserver()
+{
+}
 
 template <typename T>
 FutureRep<T>::FutureRep()
@@ -24,39 +36,82 @@ FutureRep<T>::~FutureRep()
 template <typename T>
 int FutureRep<T>::set( const T &r, Future<T> &caller )
 {
-    // TBD
-
-    return 0;
-}
-
-template <typename T>
-int FutureRep<T>::set( const T &r )
-{
     if ( this->mValue == nullptr )
     {
         unique_lock<std::mutex> lock( mValueReadyMutex );
         this->mValue = new T( r );
+
+        for ( auto observer : mObserverCollection )
+        {
+            if ( observer != nullptr )
+            {
+                observer->update( caller );
+            }
+        }
+
         this->mValueReady.notify_all();
     }
     return 0;
 }
 
 template <typename T>
-int FutureRep<T>::get( T &value, unsigned long int timeout ) 
+int FutureRep<T>::get( T &value, unsigned long int timeout )
 {
+    int result = 0;
     if ( this->mValue == nullptr )
     {
         unique_lock<mutex> lock( this->mValueReadyMutex );
-        mValueReady.wait_for( lock,
-                              chrono::seconds( timeout ),
-                              [this]
-                              { return ( this->mValue != nullptr ); } );
+        bool rc = mValueReady.wait_for( lock,
+                                        chrono::milliseconds( timeout ),
+                                        [this]
+                                        { return ( this->mValue != nullptr ); } );
+
+        if ( rc == false )
+        {
+            cout << "FutureRep::"
+                 << __FUNCTION__ << ": "
+                 << "time out"
+                 << endl;
+            result = -1;
+        }
     }
 
-    value = *this->mValue;
-
-    return 0;
+    if ( this->mValue != nullptr )
+    {
+        value = *this->mValue;
+    }
+    return result;
 }
+
+template <typename T>
+int FutureRep<T>::attach( FutureObserver<T> *observer,
+                          Future<T> &caller )
+{
+    lock_guard<std::mutex> lock( mValueReadyMutex );
+
+    int result = 0;
+
+    // If the value is already produced, then notify observer
+    if ( this->mValue == nullptr )
+    {
+        auto rc = this->mObserverCollection.insert( observer );
+        result = rc.second ? 0 : -1;
+    }
+    else
+    {
+        observer->update( caller );
+    }
+    return result;
+}
+
+template <typename T>
+int FutureRep<T>::detach( FutureObserver<T> *observer )
+{
+    lock_guard<std::mutex> lock( mValueReadyMutex );
+
+    return this->mObserverCollection.remove( observer );
+}
+
 template <typename T>
 int FutureRep<T>::ready() const
 {
@@ -84,11 +139,11 @@ int Future<T>::cancle()
 template <typename T>
 int Future<T>::set( const T &r )
 {
-    return this->mRep->set( r );
+    return this->mRep->set( r, *this );
 }
 
 template <typename T>
-int Future<T>::get( T &value, unsigned long int timeout )
+int Future<T>::get( T &value, unsigned long int timeout ) const
 {
     return this->mRep->get( value, timeout );
 }
@@ -98,6 +153,19 @@ int Future<T>::ready() const
 {
     return this->mRep->ready();
 }
+
+template <class T>
+int Future<T>::attach( FutureObserver<T> *observer )
+{
+    return this->mRep->attach( observer, *this );
+}
+
+template <class T>
+int Future<T>::detach( FutureObserver<T> *observer )
+{
+    return this->mRep->detach( observer );
+}
+
 } //namespace ActiveObject_1_0
 
 #endif //FRAMEWORK_ACTIVE_OBJECT_1_0_FUTURE_CPP_

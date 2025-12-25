@@ -15,6 +15,7 @@ class ActObjClient : public Task_1_0::Task
     virtual ~ActObjClient();
     int svc() override;
     int open( void *args = 0 ) override;
+    int getHandle();
 
   private:
     void processMessage( const std::string &message );

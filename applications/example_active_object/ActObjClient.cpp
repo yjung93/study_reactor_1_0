@@ -1,5 +1,7 @@
 
 #include "ActObjClient.hpp"
+#include "ActObjMethodCallback.hpp"
+
 #include <iostream>
 #include <sys/socket.h>
 
@@ -44,16 +46,61 @@ int ActObjClient::svc()
     return 0;
 }
 
+int ActObjClient::getHandle()
+{
+    return mSocketFd;
+}
+
 void ActObjClient::processMessage( const std::string &message )
 {
     cout << "ActObjClient::"
          << __FUNCTION__
          << endl;
 
-    ActiveObject_1_0::Future<string> result = mServantProxy.requestGetReturnMessageSync( message );
+    string messageToSend = "Unknown Error";
 
-    string messageToSend;
-    result.get( messageToSend, 2000 );
-    send( mSocketFd, messageToSend.c_str(), messageToSend.size(), 0 );
+    static unsigned int usecaseItterate = 0;
+    unsigned int usecase = usecaseItterate % 3;
+    usecaseItterate++;
+
+    switch ( usecase )
+    {
+        case 0: // sync timeout 2s
+        {
+            ActiveObject_1_0::Future<string> future = mServantProxy.requestGetReturnMessage( message );
+
+            int rc = future.get( messageToSend, 2000 );
+            if ( rc == -1 )
+            {
+                messageToSend = "Request Timeout";
+            }
+            send( mSocketFd, messageToSend.c_str(), messageToSend.size(), 0 );
+            break;
+        }
+        case 1: // sync timeout 500ms
+        {
+            ActiveObject_1_0::Future<string> future = mServantProxy.requestGetReturnMessage( message );
+
+            int rc = future.get( messageToSend, 500 );
+            if ( rc == -1 )
+            {
+                messageToSend = "Request Timeout";
+            }
+            send( mSocketFd, messageToSend.c_str(), messageToSend.size(), 0 );
+            break;
+        }
+        case 2: // async.
+        {
+            ActiveObject_1_0::Future<string> future = mServantProxy.requestGetReturnMessage( message );
+            future.attach( new CallbackGetReturnMessage( *this ) );
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+
+    
 }
 } // namespace ExActiveObject
