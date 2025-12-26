@@ -8,10 +8,16 @@ namespace ExActiveObject
 
 ActObjServantProxy::ActObjServantProxy()
 {
+    cout << "ActObjServantProxy::"
+         << __FUNCTION__
+         << endl;
 }
 
 ActObjServantProxy::~ActObjServantProxy()
 {
+    cout << "ActObjServantProxy::"
+         << __FUNCTION__
+         << endl;
 }
 
 ActiveObject_1_0::Future<string> ActObjServantProxy::requestGetReturnMessage( const string &message )
@@ -27,5 +33,6 @@ ActiveObject_1_0::Future<string> ActObjServantProxy::requestGetReturnMessage( co
 
     return result;
 }
+
 
 } // namespace ExActiveObject

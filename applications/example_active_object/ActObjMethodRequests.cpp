@@ -28,4 +28,5 @@ int RequestGetReturnMessage::call()
     return 0;
 }
 
+
 } // namespace ExActiveObject

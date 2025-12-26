@@ -10,7 +10,8 @@ using namespace std;
 namespace ExActiveObject
 {
 ActObjClient::ActObjClient( int socketFd )
-    : mSocketFd( socketFd )
+    : mSocketFd( socketFd ),
+      mUsecaseItterate( 0 )
 {
     cout << "ActObjClient::"
          << __FUNCTION__
@@ -59,9 +60,8 @@ void ActObjClient::processMessage( const std::string &message )
 
     string messageToSend = "Unknown Error";
 
-    static unsigned int usecaseItterate = 0;
-    unsigned int usecase = usecaseItterate % 3;
-    usecaseItterate++;
+    unsigned int usecase = mUsecaseItterate % 3;
+    mUsecaseItterate++;
 
     switch ( usecase )
     {
@@ -100,7 +100,5 @@ void ActObjClient::processMessage( const std::string &message )
             break;
         }
     }
-
-    
 }
 } // namespace ExActiveObject

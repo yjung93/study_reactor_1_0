@@ -31,8 +31,14 @@ int ActObjScheduler::svc()
 
     while ( true )
     {
+        ActiveObject_1_0::MethodRequest *methodRequest = this->mActivationQueue.dequeue();
+        if ( methodRequest == nullptr)
+        {
+            break;
+        }
+
         // Dequeue the next method object
-        std::unique_ptr<ActiveObject_1_0::MethodRequest> request( this->mActivationQueue.dequeue() );
+        std::unique_ptr<ActiveObject_1_0::MethodRequest> request( methodRequest);
 
         // Invoke the method request.
         if ( request->call() == -1 )

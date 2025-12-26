@@ -14,6 +14,10 @@ namespace ActiveObject_1_0
 
 class ActivationQueue
 {
+  enum State{
+    STATE_ACTIVE,
+    STATE_SHUTDOWN
+  };
   public:
     ActivationQueue();
     virtual ~ActivationQueue();
@@ -21,10 +25,15 @@ class ActivationQueue
     MethodRequest *dequeue();
     int enqueue( MethodRequest *newMethodRequest );
 
+    void exit();
+
   private:
     vector<MethodRequest*> mMethodRequestQueue;
     mutex mQueueMutex;
     condition_variable mQueueCondition;
+
+    State mState;
+
 };
 
 } //namespace ActiveObject_1_0

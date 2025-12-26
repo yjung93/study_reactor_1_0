@@ -4,19 +4,9 @@ namespace ActiveObject_1_0
 {
 
 
-MethodRequest::MethodRequest( unsigned long prio )
-    : mPriority( prio )
+MethodRequest::MethodRequest(  )
 {
 }
 
-unsigned long MethodRequest::priority() const
-{
-    return this->mPriority;
-}
-
-void MethodRequest::priority( unsigned long prio )
-{
-    this->mPriority = prio;
-}
 
 } //namespace ActiveObject_1_0

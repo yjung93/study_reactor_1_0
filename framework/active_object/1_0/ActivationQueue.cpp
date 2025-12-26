@@ -7,11 +7,19 @@ namespace ActiveObject_1_0
 {
 
 ActivationQueue::ActivationQueue()
+    : mState( STATE_ACTIVE )
 {
+    cout << "ActivationQueue::"
+         << __FUNCTION__ << ": "
+         << endl;
 }
 
 ActivationQueue::~ActivationQueue()
 {
+    cout << "ActivationQueue::"
+         << __FUNCTION__ << ": "
+         << endl;
+    exit();
 }
 
 MethodRequest *ActivationQueue::dequeue()
@@ -20,14 +28,25 @@ MethodRequest *ActivationQueue::dequeue()
 
     unique_lock<mutex> lock( mQueueMutex );
 
-    mQueueCondition.wait( lock,
-                          [this]
-                          { return !mMethodRequestQueue.empty(); } );
+    // mQueueCondition.wait( lock,
+    //                       [this]
+    //                       { return !mMethodRequestQueue.empty(); } );
+
+    mQueueCondition.wait( lock );
+    if ( mState == STATE_SHUTDOWN )
+    {
+        cout << "ActivationQueue::"
+             << __FUNCTION__ << ": "
+             << " exit"
+             << endl;
+
+        return methodRequest;
+    }
 
     if ( mMethodRequestQueue.empty() )
     {
-        cout << "MethodRequest::"
-             << __FUNCTION__
+        cout << "ActivationQueue::"
+             << __FUNCTION__ << ": "
              << " mMethodRequestQueue is empty"
              << endl;
     }
@@ -36,7 +55,7 @@ MethodRequest *ActivationQueue::dequeue()
         methodRequest = mMethodRequestQueue.front();
 
         thread::id this_id = this_thread::get_id();
-        cout << "MethodRequest::"
+        cout << "ActivationQueue::"
              << __FUNCTION__
              << " threadId="
              << this_id
@@ -63,6 +82,16 @@ int ActivationQueue::enqueue( MethodRequest *methodRequest )
     mMethodRequestQueue.push_back( methodRequest );
     mQueueCondition.notify_one();
     return 0;
+}
+
+void ActivationQueue::exit()
+{
+    cout << "ActivationQueue::"
+         << __FUNCTION__ << ": "
+         << endl;
+
+    mState = STATE_SHUTDOWN;
+    mQueueCondition.notify_one();
 }
 
 } // namespace ActiveObject_1_0

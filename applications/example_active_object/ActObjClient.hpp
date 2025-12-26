@@ -22,6 +22,7 @@ class ActObjClient : public Task_1_0::Task
     int mSocketFd;
 
     ActObjServantProxy mServantProxy;
+    unsigned int mUsecaseItterate;
 };
 } // namespace ExActiveObject
 #endif /* APPLICATIONS_EXAMPLE_ActObjClient_HPP_ */

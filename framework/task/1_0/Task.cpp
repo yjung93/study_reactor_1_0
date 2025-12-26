@@ -17,10 +17,16 @@ namespace Task_1_0
 Task::Task()
     : mStopRequested( false )
 {
+    cout << "Task::"
+         << __FUNCTION__
+         << endl;
 }
 
 Task::~Task()
 {
+    cout << "Task::"
+         << __FUNCTION__
+         << endl;
     {
         lock_guard<mutex> guard( mQueueMutex );
         mStopRequested = true;
