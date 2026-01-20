@@ -1,0 +1,8 @@
+#ifndef PROACTOR_1_0_ASYNC_PSEUDO_TASK_HPP_
+#define PROACTOR_1_0_ASYNC_PSEUDO_TASK_HPP_
+
+namespace Proactor_1_0
+{
+}
+
+#endif // PROACTOR_1_0_ASYNC_PSEUDO_TASK_HPP_

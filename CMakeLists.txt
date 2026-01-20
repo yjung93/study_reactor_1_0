@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.10)
 
 PROJECT(study_framework)
 
@@ -42,6 +42,15 @@ set (lib_framework_acceptor_connector_1_0
      framework/acceptor_connector/1_0/SockConnector.cpp 
      framework/acceptor_connector/1_0/SockStream.cpp )
 
+set (lib_framework_proactor_1_0
+     framework/proactor/1_0/AsynchPseudoTask.cpp
+     framework/proactor/1_0/AsynchReadStream.cpp
+     framework/proactor/1_0/AsynchWriteStream.cpp 
+     framework/proactor/1_0/Handler.cpp
+     framework/proactor/1_0/AsynchResult.cpp
+     framework/proactor/1_0/Proactor.cpp 
+     framework/proactor/1_0/AsynchOperation.cpp
+     framework/proactor/1_0/ServiceHandler.cpp)
 
 set (example_1_client_source 
      applications/example_reactor/MainClient.cpp )
@@ -85,6 +94,14 @@ set (ex_active_object_server_lib
      applications/example_active_object/ActObjServantProxy.cpp
      applications/example_active_object/ActObjServant.cpp
      applications/example_active_object/ActObjMethodCallback.cpp)
+
+set (ex_proactor_client_lib 
+     applications/example_proactor/MainClient.cpp )
+     
+set (ex_proactor_server_lib 
+     applications/example_proactor/MainServer.cpp
+     applications/example_proactor/Acceptor.cpp
+     applications/example_proactor/ServerEventHandler.cpp )
      
 
 add_executable(example_reactor_client
@@ -125,10 +142,18 @@ add_executable(ex_active_object_server
   ${lib_framework_active_object_1_0}
 )
 
- 
-
 add_executable(ex_active_object_client
   ${ex_active_object_client_lib}
+)
+
+add_executable(ex_proactor_client
+  ${ex_proactor_client_lib}
+)
+
+add_executable(ex_proactor_server
+  ${ex_proactor_server_lib}
+  ${lib_framework_reactor_1_0}
+  ${lib_framework_proactor_1_0}
 )
 
 

@@ -1,0 +1,171 @@
+[33mcommit b28ad8aaa7663b14f79e7c22bb22bb973e0a7509[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mwipProact_0114a[m[33m)[m
+Author: Jake Yoo <yjung93@gmail.com>
+Date:   Thu Jan 15 15:39:35 2026 +0100
+
+    WIP: save progress
+
+[33mcommit 96b83955ae13499246ea5b6e8ab04cc70ee9a7e6[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: jake <yjung@gmail.com>
+Date:   Sat Jan 3 17:33:05 2026 +0100
+
+    [Active Object] design docs and etc
+
+[33mcommit 36662c26da2fb156989d73111faba6d24b3edc29[m
+Author: jake <yjung@gmail.com>
+Date:   Fri Dec 26 16:27:46 2025 +0100
+
+    [ActiveObject] exit scheule thread and etc.
+
+[33mcommit 34eeba503e925421e02dc77f9f6d62d84fbe7bee[m
+Author: jake <yjung@gmail.com>
+Date:   Thu Dec 25 17:57:20 2025 +0100
+
+    [ActiveObject] Async callback
+
+[33mcommit 8d655c0aee7f7f9c6c093594076cfcea17224874[m
+Author: jake <yjung@gmail.com>
+Date:   Wed Dec 24 17:21:28 2025 +0100
+
+    [ActiveObject] Basic structure, synchronous get from Future.
+
+[33mcommit 7937c62563fdab3687affb0255899ad24aa10c3e[m
+Author: jake <yjung@gmail.com>
+Date:   Sun Dec 14 19:33:04 2025 +0100
+
+    [ActiveObject] initial draft
+
+[33mcommit 9edde921ac85072536ae5c94976ead6d428d4bc2[m
+Author: jake <yjung@gmail.com>
+Date:   Sun Nov 16 17:34:07 2025 +0100
+
+    [Half-Sync/Half-Async] rename classes:wq
+
+[33mcommit e1e7c2bb9b14eba79b4ace8ae4a3364b5e17bd13[m
+Author: jake <yjung@gmail.com>
+Date:   Thu Nov 6 17:15:15 2025 +0100
+
+    [HalfSync/HalfAsync] added instance repository management
+
+[33mcommit f4d655612d1c7322a35191cef5b97ac694617bff[m
+Author: jake <yjung@gmail.com>
+Date:   Wed Nov 5 17:55:49 2025 +0100
+
+    draft version of half-sync/half-async
+
+[33mcommit d00344ebaaeb4671765a4ea20a54e83653ed8ea1[m
+Author: jake <yjung@gmail.com>
+Date:   Fri Aug 8 17:52:00 2025 +0200
+
+    build env for vscode
+
+[33mcommit c24c3f4fb32191c37fb0cb162f9330fbc6522e95[m
+Author: jake <yjung@gmail.com>
+Date:   Wed Jul 2 14:22:15 2025 +0200
+
+    [Acceptor_Conntor] Reorganize directory structure
+
+[33mcommit d8550d730a96f3b34c731c20d581cf1fac8c7e82[m
+Author: jake <yjung@gmail.com>
+Date:   Tue Jul 1 18:39:25 2025 +0200
+
+    [Acceptor_connector] extention of connector and etc
+
+[33mcommit 8e5f6435afa985ef036c7e9d14d552318de9f911[m
+Author: jake <yjung@gmail.com>
+Date:   Sat Jun 14 17:51:25 2025 +0200
+
+    [Acceptor_Connector] connector implementation and etc.
+
+[33mcommit 31857ef820f4234a9e42ce5107abdd5541f2ece7[m
+Author: jake <yjung@gmail.com>
+Date:   Sat May 17 16:42:10 2025 +0200
+
+    separated template class definition  into cpp
+
+[33mcommit 560afc98dbfd46b3266588fcdbd390b8a5a3e73c[m
+Author: jake <yjung@gmail.com>
+Date:   Sun May 11 20:21:06 2025 +0200
+
+    modification of Acceptor Connector Pattern
+    - svc handler
+    - socket stream
+    - input handler as a application service.
+
+[33mcommit 3e412e35c73161c620861d885cbc8bef8f668c2a[m
+Author: jake <yjung@gmail.com>
+Date:   Sun May 4 14:59:07 2025 +0200
+
+    modification for acceptor connector pattern
+
+[33mcommit 55b6cf067ec078f16b4820a3862cd8b9b8a756b6[m
+Author: jake <yjung@gmail.com>
+Date:   Sun Jan 26 20:17:12 2025 +0100
+
+    some modification.
+
+[33mcommit 1558dde9c93e2240f271b57ef7e8e47fe1de980d[m
+Author: jake <yjung@gmail.com>
+Date:   Sun Jan 19 19:11:05 2025 +0100
+
+    some implementation on acceptor and etc.
+
+[33mcommit 7def70509e66dac5e4a64c153065d8934e1e1ce7[m
+Author: jake <yjung@gmail.com>
+Date:   Fri Jan 17 17:14:44 2025 +0100
+
+    draft acceptor/connector pattern
+
+[33mcommit 9afe1a3148b82690a8a03424be79b88a9af2452e[m
+Author: jake <yjung@gmail.com>
+Date:   Mon Jan 6 16:56:49 2025 +0100
+
+    draft copy of v.2.0
+
+[33mcommit 1e86994ec20dc5ba1065713d9d7fbca939b20bda[m
+Author: jake <yjung@gmail.com>
+Date:   Mon Jan 6 15:49:44 2025 +0100
+
+    rename directory and namespace
+
+[33mcommit b1438031acbb74ef9e9c73140cb9a49848f0a865[m
+Author: jake <yjung@gmail.com>
+Date:   Sun Dec 29 18:20:23 2024 +0100
+
+    - client gets input text and send it to server
+    - server replies received message to client
+
+[33mcommit eb817b2bae0b2658a68a34a0a586ee7a07dc5b6d[m
+Author: jake <yjung@gmail.com>
+Date:   Wed Dec 25 19:20:10 2024 +0100
+
+    .
+
+[33mcommit 48db81289389e6afdb83cec5c72ecf2d6b670ec8[m
+Author: jake <yjung@gmail.com>
+Date:   Mon Dec 23 17:28:58 2024 +0100
+
+    cleaning up obsolete
+
+[33mcommit 82d00eef1e7a8554309880a734932d114fed6f36[m
+Author: jake <yjung@gmail.com>
+Date:   Sun Nov 17 19:20:52 2024 +0100
+
+    modifed to reference based interator
+
+[33mcommit bb2a364c9505c74ddaa32343cd48dc711af528f5[m
+Author: jake <yjung@gmail.com>
+Date:   Sun Nov 17 18:55:04 2024 +0100
+
+    modifed handler and etc
+
+[33mcommit 60332906a99a3c57ea96593e1fcdc5193ec238bc[m
+Author: jake <yjung@gmail.com>
+Date:   Thu Nov 14 18:25:53 2024 +0100
+
+    initial
+
+[33mcommit 89dd78996b039fad1ff3118dd08d89aed657eabb[m
+Author: jake <yjung@gmail.com>
+Date:   Thu Nov 14 16:41:08 2024 +0100
+
+    first commit

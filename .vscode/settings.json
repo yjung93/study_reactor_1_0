@@ -57,4 +57,7 @@
         "ostream": "cpp"
 
     }
+  
+    "clang-format.executable": "/home/yjung93/.vscode-server/extensions/ms-vscode.cpptools-1.29.3-linux-x64/LLVM/bin/clang-format"
+    
 }
