@@ -111,9 +111,6 @@ int AsynchReadStream::read( vector<uint8_t> &message,
          << __FUNCTION__
          << ": "
          << endl;
-    // size_t space = message.space();
-    // if ( bytes_to_read > space )
-    //     bytes_to_read = space;
 
     if ( bytes_to_read == 0 )
     {
@@ -134,12 +131,14 @@ int AsynchReadStream::read( vector<uint8_t> &message,
                                                                  signal_number );
 
     int return_val = proactor->startAio( result, Proactor::OPCODE_READ );
+
     cout << "AsynchReadStream::"
          << __FUNCTION__
          << ": "
          << "return_val="
          << return_val
          << endl;
+
     if ( return_val == -1 )
     {
         delete result;
@@ -161,10 +160,6 @@ int AsynchReadStream::open( Handler &handler,
     proactor_ = proactor;
     handler_proxy_ = handler.proxy();
     handle_ = handle;
-    if ( proactor_ == nullptr )
-    {
-        proactor_ = Proactor::getInstance();
-    }
     return 0;
 }
 

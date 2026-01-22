@@ -21,7 +21,8 @@ namespace example_proactor
 
 ServerEventHandler::ServerEventHandler( Acceptor &owner )
     : mOwner( &owner ),
-      mMessage( 1024 )
+      mMessageRead( 1024 ),
+      mMessageWrite( 0 )
 
 {
     cout << "ServerEventHandler::"
@@ -34,6 +35,8 @@ ServerEventHandler::~ServerEventHandler()
     cout << "ServerEventHandler::"
          << __FUNCTION__
          << endl;
+
+    close( handle() );
 }
 
 void ServerEventHandler::open( int new_handle )
@@ -44,7 +47,9 @@ void ServerEventHandler::open( int new_handle )
          << endl;
 
     mReader.open( *this, new_handle, 0, proactor() );
-    mReader.read( mMessage, mMessage.size() );
+    mWriter.open( *this, new_handle, 0, proactor() );
+
+    mReader.read( mMessageRead, mMessageRead.size() );
 }
 
 // int ServerEventHandler::handleInput( int fd )
@@ -93,21 +98,53 @@ void ServerEventHandler::open( int new_handle )
 
 void ServerEventHandler::handle_read_stream( const Proactor_1_0::AsynchReadStreamResult &result )
 {
-    string messageReceived( result.message().begin(), result.message().begin() + result.bytes_transferred() );
-    cout << "ServerEventHandler::"
-         << __FUNCTION__
-         << ": "
-         << "received="
-         << messageReceived
-         << endl;
+    if ( result.success() != true || result.bytes_transferred() == 0 )
+    {
+        delete this;
+    }
+    else if ( result.bytes_transferred() > 0 )
+    {
+        string messageReceived( result.message().begin(), result.message().begin() + result.bytes_transferred() );
+        cout << "ServerEventHandler::"
+             << __FUNCTION__
+             << ": "
+             << "received="
+             << messageReceived
+             << endl;
 
-    string messageToSend = "Echo - " + string( messageReceived );
-    send( result.aio_fildes, messageToSend.c_str(), messageToSend.size(), 0 );
+        string messageToSend = "Echo - " + string( messageReceived );
+        send( result.aio_fildes, messageToSend.c_str(), messageToSend.size(), 0 );
 
-    cout << "Replied message: "
-         << messageToSend
-         << endl;
+        mMessageWrite.assign( messageToSend.begin(), messageToSend.end() );
+        mWriter.write( mMessageWrite, mMessageWrite.size() );
 
-    mReader.read( mMessage, mMessage.size() );
+        cout << "Replied message: "
+             << messageToSend
+             << endl;
+
+        mReader.read( mMessageRead, mMessageRead.size() );
+    }
+}
+
+void ServerEventHandler::handle_write_stream( const Proactor_1_0::AsynchWriteStreamResult &result )
+{
+    if ( result.success() != true || result.bytes_transferred() == 0 )
+    {
+        cout << "ServerEventHandler::"
+             << __FUNCTION__
+             << ": "
+             << "fail to send"
+             << endl;
+    }
+    else if ( result.bytes_transferred() > 0 )
+    {
+        string messageReceived( result.message().begin(), result.message().begin() + result.bytes_transferred() );
+        cout << "ServerEventHandler::"
+             << __FUNCTION__
+             << ": "
+             << "sent="
+             << messageReceived
+             << endl;
+    }
 }
 } /* namespace example_proactor */

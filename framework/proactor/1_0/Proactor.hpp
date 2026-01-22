@@ -4,6 +4,7 @@
 #include <vector>
 #include <deque>
 #include <signal.h>
+#include <mutex>
 
 #include "AsynchResult.hpp"
 
@@ -11,9 +12,12 @@ using namespace std;
 
 namespace Proactor_1_0
 {
+class NotifyPipeManager;
 
 class Proactor
 {
+    friend class NotifyPipeManager;
+
   public:
     enum Opcode
     {
@@ -34,6 +38,7 @@ class Proactor
     int postWakeupCompletions( int how_many );
     int postCompletion( AsynchResult *result );
     int get_handle() const;
+    int notifyCompletion();
 
   protected:
     int handleEvents();
@@ -57,18 +62,23 @@ class Proactor
 
     ssize_t allocateAioSlot( AsynchResult *result );
 
+    void createNotifyManager();
+    int createResultAiocbList();
+    int deleteResultAiocbList();
+    void setNotifyHandle( int h );
+
     static Proactor *mInstance;
+
+    //to keep track of all the aio's
+    // issued currently.
+    aiocb **mAiocbList;
+    AsynchResult **mResultList;
 
     /// To maintain the maximum size of the array (list).
     size_t mAiocbListMaxSize;
 
     /// To maintain the current size of the array (list).
     size_t mAiocbListCurSize;
-
-    //to keep track of all the aio's
-    // issued currently.
-    std::vector<aiocb *> mAiocbList;
-    std::vector<AsynchResult *> mResultList;
 
     /// Number of ACE_POSIX_Asynch_Result's waiting for start
     /// i.e. deferred AIOs
@@ -87,6 +97,10 @@ class Proactor
     sig_atomic_t mEventLoopThreadCount;
 
     int mHandle;
+
+    NotifyPipeManager *mAiocbNotifyPipeManager;
+    int mNotifyPipeReadHandle;
+    recursive_mutex mRecursiveMutex;
 };
 
 } // namespace Proactor_1_0

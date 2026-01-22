@@ -13,7 +13,7 @@
 
 #include "framework/proactor/1_0/AsynchReadStream.hpp"
 #include "framework/proactor/1_0/ServiceHandler.hpp"
-#include "framework/proactor/1_0/AsynchReadStream.hpp"
+#include "framework/proactor/1_0/AsynchWriteStream.hpp"
 
 namespace example_proactor
 {
@@ -25,16 +25,18 @@ class ServerEventHandler : public Proactor_1_0::ServiceHandler
   public:
     const int messageSize = 8;
     ServerEventHandler( Acceptor &owner );
-    virtual ~ServerEventHandler();
-    virtual void open( int new_handle ) override;
-    virtual void handle_read_stream( const Proactor_1_0::AsynchReadStreamResult &result ) override;
+    ~ServerEventHandler();
+    void open( int new_handle ) override;
+    void handle_read_stream( const Proactor_1_0::AsynchReadStreamResult &result ) override;
+    void handle_write_stream( const Proactor_1_0::AsynchWriteStreamResult &result ) override;
 
   private:
-    // int handleInput( int fd = INVALID_HANDLE ) override;
 
     Acceptor *mOwner;
-    Proactor_1_0::AsynchReadStream mReader; // Async read factory
-    vector<uint8_t> mMessage;
+    Proactor_1_0::AsynchReadStream mReader; // Async read
+    Proactor_1_0::AsynchWriteStream mWriter; // Async read
+    vector<uint8_t> mMessageRead;
+    vector<uint8_t> mMessageWrite;
 };
 
 } /* namespace example_proactor */

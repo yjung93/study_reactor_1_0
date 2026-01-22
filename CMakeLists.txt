@@ -50,7 +50,8 @@ set (lib_framework_proactor_1_0
      framework/proactor/1_0/AsynchResult.cpp
      framework/proactor/1_0/Proactor.cpp 
      framework/proactor/1_0/AsynchOperation.cpp
-     framework/proactor/1_0/ServiceHandler.cpp)
+     framework/proactor/1_0/ServiceHandler.cpp 
+     framework/proactor/1_0/NotifyPipeManager.cpp )
 
 set (example_1_client_source 
      applications/example_reactor/MainClient.cpp )

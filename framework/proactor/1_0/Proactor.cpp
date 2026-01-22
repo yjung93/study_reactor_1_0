@@ -1,8 +1,10 @@
 #include <string>
 #include <iostream>
+#include <thread>
 
 #include "Proactor.hpp"
 #include "AsynchResult.hpp"
+#include "NotifyPipeManager.hpp"
 
 #include "framework/reactor/1_0/EventHandler.hpp"
 
@@ -11,18 +13,32 @@ namespace Proactor_1_0
 Proactor *Proactor::mInstance = 0;
 
 Proactor::Proactor()
-    : mAiocbListMaxSize( _SC_AIO_MAX ),
+    : mAiocbList( nullptr ),
+      mResultList( nullptr ),
+      mAiocbListMaxSize( _SC_AIO_MAX ),
       mAiocbListCurSize( 0 ),
-      mAiocbList( mAiocbListMaxSize ),
-      mResultList( mAiocbListMaxSize ),
       mNumDeferredAiocb( 0 ),
       mNumStartedAio( 0 ),
-      mHandle( INVALID_HANDLE )
+      mHandle( INVALID_HANDLE ),
+      mAiocbNotifyPipeManager( nullptr ),
+      mNotifyPipeReadHandle( INVALID_HANDLE )
 {
+    createResultAiocbList();
+    createNotifyManager();
+    notifyCompletion();
 }
 
 Proactor::~Proactor()
 {
+    cout << "Proactor::"
+         << __FUNCTION__
+         << ": "
+         << endl;
+
+    if ( mAiocbNotifyPipeManager != nullptr )
+    {
+        delete mAiocbNotifyPipeManager;
+    }
 }
 
 Proactor *Proactor::getInstance()
@@ -35,6 +51,93 @@ Proactor *Proactor::getInstance()
     return Proactor::mInstance;
 }
 
+int Proactor::createResultAiocbList()
+{
+    if ( mAiocbList != nullptr )
+    {
+        return 0;
+    }
+
+    mAiocbList = new aiocb *[mAiocbListMaxSize];
+    mResultList = new AsynchResult *[mAiocbListMaxSize];
+
+    // Initialize the array.
+    for ( size_t ai = 0; ai < mAiocbListMaxSize; ai++ )
+    {
+        mAiocbList[ai] = 0;
+        mResultList[ai] = 0;
+    }
+
+    return 0;
+}
+
+int Proactor::deleteResultAiocbList()
+{
+    if ( mAiocbList == 0 ) // already deleted
+        return 0;
+
+    size_t ai;
+
+    // Try to cancel all uncompleted operations; POSIX systems may have
+    // hidden system threads that still can work with our aiocbs!
+    for ( ai = 0; ai < mAiocbListMaxSize; ai++ )
+    {
+        if ( mAiocbList[ai] != 0 ) // active operation
+        {
+            // cancelAiocb( mResultList[ai] );
+        }
+    }
+
+    int num_pending = 0;
+
+    for ( ai = 0; ai < mAiocbListMaxSize; ai++ )
+    {
+        if ( mAiocbList[ai] == 0 ) //  not active operation
+            continue;
+
+        // Get the error and return status of the aio_ operation.
+        int error_status = 0;
+        size_t transfer_count = 0;
+        int flg_completed = getResultStatus( mResultList[ai],
+                                             error_status,
+                                             transfer_count );
+
+        //don't delete uncompleted AIOCB's
+        if ( flg_completed == 0 ) // not completed !!!
+        {
+            num_pending++;
+        }
+        else // completed , OK
+        {
+            delete mResultList[ai];
+            mResultList[ai] = 0;
+            mAiocbList[ai] = 0;
+        }
+    }
+
+    // If it is not possible cancel some operation (num_pending > 0 ),
+    // we can do only one thing -report about this
+    // and complain about POSIX implementation.
+    // We know that we have memory leaks, but it is better than
+    // segmentation fault!
+
+    cout << "Proactor::"
+         << __FUNCTION__
+         << ": "
+         << "number pending AIO="
+         << num_pending
+         << endl;
+
+    delete[] mAiocbList;
+    mAiocbList = 0;
+
+    delete[] mResultList;
+    mResultList = 0;
+
+    return ( num_pending == 0 ? 0 : -1 );
+    // ?? or just always return 0;
+}
+
 ssize_t Proactor::allocateAioSlot( AsynchResult *result )
 {
     size_t i = 0;
@@ -42,7 +145,7 @@ ssize_t Proactor::allocateAioSlot( AsynchResult *result )
     // we reserve zero slot for ACE_AIOCB_Notify_Pipe_Manager
     // so make check for ACE_AIOCB_Notify_Pipe_Manager request
 
-    if ( 0 ) //notify_pipe_read_handle_ == result->aio_fildes ) // Notify_Pipe ?
+    if ( mNotifyPipeReadHandle == result->aio_fildes ) // Notify_Pipe ?
     {
         // should be free,
         if ( mAiocbList[i] != 0 ) // only 1 request
@@ -58,12 +161,12 @@ ssize_t Proactor::allocateAioSlot( AsynchResult *result )
     }
     else //try to find free slot as usual, but starting from 1
     {
-        for ( i = 1; i < this->mAiocbListMaxSize; i++ )
+        for ( i = 1; i < mAiocbListMaxSize; i++ )
             if ( mAiocbList[i] == 0 )
                 break;
     }
 
-    if ( i >= this->mAiocbListMaxSize )
+    if ( i >= mAiocbListMaxSize )
     {
         cout << "Proactor::"
              << __FUNCTION__
@@ -81,6 +184,8 @@ ssize_t Proactor::allocateAioSlot( AsynchResult *result )
 int Proactor::startAio( AsynchResult *result,
                         Proactor::Opcode op )
 {
+    lock_guard<recursive_mutex> guard( mRecursiveMutex );
+
     cout << "Proactor::"
          << __FUNCTION__
          << ": "
@@ -88,8 +193,14 @@ int Proactor::startAio( AsynchResult *result,
 
     int returnValue = -1;
     if ( result == 0 ) // Just check the status of the list
+    {
+        cout << "Proactor::"
+             << __FUNCTION__
+             << ": "
+             << "invalid result object, nullptr"
+             << endl;
         return returnValue;
-
+    }
     // Save operation code in the aiocb
     switch ( op )
     {
@@ -122,15 +233,6 @@ int Proactor::startAio( AsynchResult *result,
 
     int rc = startAioI( result );
 
-    cout << "Proactor::"
-         << __FUNCTION__
-         << ": startAioI "
-         << " slot="
-         << slot
-         << " return value="
-         << rc
-         << endl;
-
     switch ( rc )
     {
         case 0: // started OK
@@ -151,16 +253,22 @@ int Proactor::startAio( AsynchResult *result,
         mAiocbListCurSize--;
     }
 
+    cout << "Proactor::"
+         << __FUNCTION__
+         << ": "
+         << " slot="
+         << slot
+         << " AiocbListCurSize"
+         << mAiocbListCurSize
+         << " return value="
+         << returnValue
+         << endl;
+
     return returnValue;
 }
 
 int Proactor::startAioI( AsynchResult *result )
 {
-    cout << "Proactor::"
-         << __FUNCTION__
-         << ": "
-         << endl;
-
     int returnValue = -1;
     string pPype;
 
@@ -184,6 +292,36 @@ int Proactor::startAioI( AsynchResult *result )
             break;
     }
 
+    if ( returnValue == 0 )
+    {
+        ++mNumStartedAio;
+    }
+    else // if (returnValue == -1)
+    {
+        if ( errno == EAGAIN || errno == ENOMEM ) //Ok, it will be deferred AIO
+        {
+            cout << "Proactor::"
+                 << __FUNCTION__
+                 << ": "
+                 << pPype
+                 << " errno"
+                 << errno
+                 << " it will be deferred AIO"
+                 << endl;
+
+            returnValue = 1;
+        }
+        else
+        {
+            cout << "Proactor::"
+                 << __FUNCTION__
+                 << ": "
+                 << pPype
+                 << " queueing failed"
+                 << endl;
+        }
+    }
+
     cout << "Proactor::"
          << __FUNCTION__
          << ": "
@@ -199,36 +337,18 @@ int Proactor::startAioI( AsynchResult *result )
          << aio_ptr->aio_sigevent.sigev_notify
          << " pPype="
          << pPype
+         << " NumStartedAio"
+         << mNumStartedAio
          << " return value="
          << returnValue
          << endl;
-
-    if ( returnValue == 0 )
-    {
-        ++this->mNumStartedAio;
-    }
-    else // if (returnValue == -1)
-    {
-        if ( errno == EAGAIN || errno == ENOMEM ) //Ok, it will be deferred AIO
-        {
-            returnValue = 1;
-        }
-        else
-        {
-            cout << "Proactor::"
-                 << __FUNCTION__
-                 << ": "
-                 << pPype
-                 << " queueing failed"
-                 << endl;
-        }
-    }
 
     return returnValue;
 }
 
 int Proactor::cancelAio( int handle )
 {
+    lock_guard<recursive_mutex> guard( mRecursiveMutex );
     cout << "Proactor::"
          << __FUNCTION__
          << ": "
@@ -239,24 +359,55 @@ int Proactor::cancelAio( int handle )
 
 int Proactor::handleEvents()
 {
-    // cout << "Proactor::"
-    //      << __FUNCTION__
-    //      << ": "
-    //      << endl;
-
     int resultSuspend = 0;
     int retval = 0;
 
-    // Indefinite blocking.
-    resultSuspend = aio_suspend( mAiocbList.data(),
-                                 mAiocbList.size(),
+    // Create a temporary list with ONLY valid requests
+    // to pass the compacted list to aio_suspend
+    vector<aiocb *> activeList;
+    activeList.reserve( mAiocbListCurSize + 1 ); // +1 safety
+
+    {
+        // mutex lock  while building the list
+        lock_guard<recursive_mutex> guard( mRecursiveMutex );
+        for ( int idxAioList = 0; idxAioList < static_cast<int>( mAiocbListMaxSize ); idxAioList++ )
+        {
+            // cout << "Proactor::"
+            //      << __FUNCTION__
+            //      << ": activeList["
+            //      << idxAioList
+            //      << "] = "
+            //      << mAiocbList[idxAioList]
+            //      << endl;
+
+            if ( mAiocbList[idxAioList] != nullptr )
+            {
+                activeList.push_back( mAiocbList[idxAioList] );
+            }
+        }
+    }
+
+    cout << "Proactor::"
+         << __FUNCTION__
+         << ": mAiocbList.size()="
+         << mAiocbListMaxSize
+         << endl;
+
+    cout << "Proactor::"
+         << __FUNCTION__
+         << ": activeList.size()="
+         << activeList.size()
+         << endl;
+
+    resultSuspend = aio_suspend( activeList.data(),
+                                 activeList.size(),
                                  0 );
 
-    // cout << "Proactor::"
-    //      << __FUNCTION__
-    //      << ": aio_suspend, resultSuspend="
-    //      << resultSuspend
-    //      << endl;
+    cout << "Proactor::"
+         << __FUNCTION__
+         << ": aio_suspend, resultSuspend="
+         << resultSuspend
+         << endl;
 
     // Check for errors
     if ( resultSuspend == -1 )
@@ -289,18 +440,19 @@ int Proactor::handleEvents()
                                                            count );
 
             if ( AsynchResult == 0 )
+            {
                 break;
-
+            }
             // Call the application code.
-            this->applicationSpecificCode( AsynchResult,
-                                           transferCount,
-                                           0, // No completion key.
-                                           errorStatus );
+            applicationSpecificCode( AsynchResult,
+                                     transferCount,
+                                     0, // No completion key.
+                                     errorStatus );
         }
     }
 
     // process post_completed results
-    // retval += this->process_result_queue();
+    // retval +=  process_result_queue();
 
     return retval > 0 ? 1 : 0;
 }
@@ -313,21 +465,7 @@ AsynchResult *Proactor::findCompletedAio( int &errorStatus,
     // parameter index defines initial slot to scan
     // parameter count tells us how many slots should we scan
 
-    // ACE_MT( ACE_GUARD_RETURN( ACE_Thread_Mutex, ace_mon, this->mutex_, 0 ) );
-
-    // cout << "Proactor::"
-    //      << __FUNCTION__
-    //      << ": "
-    //      << " transferCount="
-    //      << transferCount
-    //      << " index="
-    //      << index
-    //      << " count="
-    //      << count
-    //      << " mAiocbListMaxSize="
-    //      << mAiocbListMaxSize
-    //      << endl;
-
+    lock_guard<recursive_mutex> guard( mRecursiveMutex );
     AsynchResult *AsynchResult = 0;
 
     if ( mNumStartedAio == 0 ) // save time
@@ -345,9 +483,9 @@ AsynchResult *Proactor::findCompletedAio( int &errorStatus,
             continue;
         }
 
-        if ( 0 != this->getResultStatus( mResultList[index],
-                                         errorStatus,
-                                         transferCount ) ) // completed
+        if ( 0 != getResultStatus( mResultList[index],
+                                   errorStatus,
+                                   transferCount ) ) // completed
         {
             break;
         }
@@ -396,7 +534,7 @@ AsynchResult *Proactor::findCompletedAio( int &errorStatus,
     index++; // for next iteration
     count--; // for next iteration
 
-    // this->start_deferred_aio();
+    //  start_deferred_aio();
     //make attempt to start deferred AIO
     //It is safe as we are protected by mutex_
 
@@ -469,7 +607,7 @@ int Proactor::startDeferredAio()
 
     size_t i = 0;
 
-    for ( i = 0; i < this->mAiocbListMaxSize; i++ )
+    for ( i = 0; i < mAiocbListMaxSize; i++ )
     {
         if ( mResultList[i] != 0 // check for
              && mAiocbList[i] == 0 ) // deferred AIO
@@ -478,7 +616,7 @@ int Proactor::startDeferredAio()
         }
     }
 
-    if ( i >= this->mAiocbListMaxSize )
+    if ( i >= mAiocbListMaxSize )
     {
         cout << "Proactor::"
              << __FUNCTION__
@@ -496,6 +634,7 @@ int Proactor::startDeferredAio()
         case 0: //started OK , decrement count of deferred AIOs
             mAiocbList[i] = result;
             mNumDeferredAiocb--;
+            notifyCompletion(); // to wake up suspended event handling loop
             return 0;
 
         case 1:
@@ -514,7 +653,7 @@ int Proactor::startDeferredAio()
 
     result->set_error( errno );
     result->set_bytes_transferred( 0 );
-    this->putqResult( result ); // we are with locked mutex_ here !
+    putqResult( result ); // we are with locked mutex_ here !
 
     return -1;
 }
@@ -528,10 +667,10 @@ int Proactor::putqResult( AsynchResult *result )
         return -1;
 
     int sigNum = result->signal_number();
-    this->mResultQueue.push_back( result );
+    mResultQueue.push_back( result );
 
     (void) sigNum; // avoid unused variable
-    // Jake, TBD, this->notify_completion(sigNum   );
+    notifyCompletion();
 
     return 0;
 }
@@ -566,15 +705,15 @@ int Proactor::proactorRunEventLoop()
     int result = 0;
 
     {
-        // ACE_MT( ACE_GUARD_RETURN( ACE_Thread_Mutex, ace_mon, mutex_, -1 ) );
+        lock_guard<recursive_mutex> guard( mRecursiveMutex );
 
         // Early check. It is ok to do this without lock, since we care just
         // whether it is zero or non-zero.
-        if ( this->mEndEventLoop != 0 )
+        if ( mEndEventLoop != 0 )
             return 0;
 
         // First time you are in. Increment the thread count.
-        this->mEventLoopThreadCount++;
+        mEventLoopThreadCount++;
     }
 
     // Run the event loop.
@@ -582,11 +721,11 @@ int Proactor::proactorRunEventLoop()
     {
         // Check the end loop flag. It is ok to do this without lock,
         // since we care just whether it is zero or non-zero.
-        if ( this->mEndEventLoop != 0 )
+        if ( mEndEventLoop != 0 )
             break;
 
         // <end_event_loop> is not set. Ready to do <handle_events>.
-        result = this->handleEvents();
+        result = handleEvents();
 
         if ( result == -1 )
             break;
@@ -596,13 +735,13 @@ int Proactor::proactorRunEventLoop()
 
     {
         // Obtain the lock in the MT environments.
-        // ACE_MT( ACE_GUARD_RETURN( ACE_Thread_Mutex, ace_mon, mutex_, -1 ) );
+        lock_guard<recursive_mutex> guard( mRecursiveMutex );
 
         // Decrement the thread count.
-        this->mEventLoopThreadCount--;
+        mEventLoopThreadCount--;
 
-        if ( this->mEventLoopThreadCount > 0 && this->mEndEventLoop != 0 )
-            this->postWakeupCompletions( 1 );
+        if ( mEventLoopThreadCount > 0 && mEndEventLoop != 0 )
+            postWakeupCompletions( 1 );
     }
 
     return result;
@@ -617,9 +756,9 @@ int Proactor::postWakeupCompletions( int how_many )
     //     {
     //       ACE_NEW_RETURN
     //         (wakeupCompletion,
-    //          ACE_POSIX_Wakeup_Completion (this->wakeup_handler_.proxy ()),
+    //          ACE_POSIX_Wakeup_Completion ( wakeup_handler_.proxy ()),
     //          -1);
-    //       if (this->postCompletion (wakeupCompletion) == -1)
+    //       if ( postCompletion (wakeupCompletion) == -1)
     //         return -1;
     //     }
 
@@ -628,9 +767,9 @@ int Proactor::postWakeupCompletions( int how_many )
 
 int Proactor::postCompletion( AsynchResult *result )
 {
-    //   ACE_MT (ACE_GUARD_RETURN (ACE_SYNCH_MUTEX, ace_mon, this->mutex_, -1));
+    lock_guard<recursive_mutex> guard( mRecursiveMutex );
 
-    int ret_val = this->putqResult( result );
+    int ret_val = putqResult( result );
 
     return ret_val;
 }
@@ -638,6 +777,62 @@ int Proactor::postCompletion( AsynchResult *result )
 int Proactor::get_handle() const
 {
     return mHandle;
+}
+
+void Proactor::createNotifyManager()
+{
+    if ( mAiocbNotifyPipeManager == nullptr )
+    {
+        cout << "Proactor::"
+             << __FUNCTION__
+             << ": "
+             << endl;
+
+        mAiocbNotifyPipeManager = new NotifyPipeManager( this );
+    }
+    else
+    {
+        cout << "Proactor::"
+             << __FUNCTION__
+             << ": "
+             << "something wrong"
+             << endl;
+    }
+}
+
+int Proactor::notifyCompletion()
+{
+    cout << "Proactor::"
+         << __FUNCTION__
+         << ": "
+         << endl;
+
+    int rc = -1;
+
+    if ( mAiocbNotifyPipeManager != nullptr )
+    {
+        rc = mAiocbNotifyPipeManager->notify();
+    }
+    else
+    {
+        cout << "Proactor::"
+             << __FUNCTION__
+             << ": "
+             << "mAiocbNotifyPipeManager : nullptr"
+             << endl;
+    }
+    return rc;
+}
+
+void Proactor::setNotifyHandle( int handle )
+{
+    cout << "Proactor::"
+         << __FUNCTION__
+         << ": "
+         << "handle="
+         << handle
+         << endl;
+    mNotifyPipeReadHandle = handle;
 }
 
 } // namespace Proactor_1_0

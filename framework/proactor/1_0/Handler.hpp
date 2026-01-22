@@ -12,6 +12,8 @@ class AsynchWriteStream;
 class Proactor;
 class AsynchReadStream;
 class AsynchReadStreamResult;
+class AsynchWriteStream;
+class AsynchWriteStreamResult;
 
 class Handler
 {
@@ -21,7 +23,7 @@ class Handler
     virtual ~Handler();
 
     virtual void handle_read_stream( const AsynchReadStreamResult &result ) {};
-    // virtual void handle_write_stream( const AsynchWriteStream::Result &result );
+    virtual void handle_write_stream( const AsynchWriteStreamResult &result ) {};
     int handle();
     Proactor *proactor();
     void proactor( Proactor *p );

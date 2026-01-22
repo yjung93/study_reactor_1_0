@@ -101,6 +101,7 @@ int Acceptor::handleInput( int fd )
     }
 
     handler->open( newSocketFd );
+    handler->proactor()->notifyCompletion();
 
     mConnections.emplace( newSocketFd, std::move( handler ) );
 
