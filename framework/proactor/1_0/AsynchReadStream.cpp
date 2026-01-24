@@ -3,10 +3,10 @@
 namespace Proactor_1_0
 {
 
-AsynchReadStreamResult::AsynchReadStreamResult( const Handler::Proxy_Ptr &handler_proxy,
+AsynchReadStreamResult::AsynchReadStreamResult( const Handler::ProxyPtr &handler_proxy,
                                                 int handle,
                                                 vector<uint8_t> &message,
-                                                size_t bytes_to_read,
+                                                size_t bytesToRead,
                                                 const void *act,
                                                 int event,
                                                 int priority,
@@ -53,7 +53,7 @@ AsynchReadStreamResult::~AsynchReadStreamResult()
 {
 }
 
-size_t AsynchReadStreamResult::bytes_to_read() const
+size_t AsynchReadStreamResult::bytesToRead() const
 {
     return this->aio_nbytes;
 }
@@ -70,12 +70,12 @@ int AsynchReadStreamResult::handle() const
     return this->aio_fildes;
 }
 
-void AsynchReadStreamResult::complete( size_t bytes_transferred, int success, const void *completion_key, u_long error )
+void AsynchReadStreamResult::complete( size_t bytes_transferred, int success, const void *completionKey, u_long error )
 {
-    this->bytes_transferred_ = bytes_transferred;
-    this->success_ = success;
-    this->completion_key_ = completion_key;
-    this->error_ = error;
+    this->mBytesTransferred = bytes_transferred;
+    this->mSuccess = success;
+    this->mCompletionKey = completionKey;
+    this->mError = error;
 
     // <errno> is available in the aiocb.
     (void) error;
@@ -87,10 +87,10 @@ void AsynchReadStreamResult::complete( size_t bytes_transferred, int success, co
     // ACE_Asynch_Read_Stream::Result result( this );
 
     // Call the application handler.
-    Handler *handler = this->handler_proxy_.get()->handler();
+    Handler *handler = this->mhandlerProxy.get()->handler();
     if ( handler != 0 )
     {
-        handler->handle_read_stream( *this );
+        handler->handleReadStream( *this );
     }
 }
 
@@ -102,7 +102,7 @@ AsynchReadStream::~AsynchReadStream()
 }
 
 int AsynchReadStream::read( vector<uint8_t> &message,
-                            size_t bytes_to_read,
+                            size_t bytesToRead,
                             const void *act,
                             int priority,
                             int signal_number )
@@ -112,7 +112,7 @@ int AsynchReadStream::read( vector<uint8_t> &message,
          << ": "
          << endl;
 
-    if ( bytes_to_read == 0 )
+    if ( bytesToRead == 0 )
     {
         errno = ENOSPC;
         return -1;
@@ -121,10 +121,10 @@ int AsynchReadStream::read( vector<uint8_t> &message,
     // Create the Asynch_Result.
 
     Proactor *proactor = this->proactor();
-    AsynchReadStreamResult *result = new AsynchReadStreamResult( this->handler_proxy_,
-                                                                 this->handle_,
+    AsynchReadStreamResult *result = new AsynchReadStreamResult( this->mhandlerProxy,
+                                                                 this->mHandle,
                                                                  message,
-                                                                 bytes_to_read,
+                                                                 bytesToRead,
                                                                  act,
                                                                  proactor->get_handle(),
                                                                  priority,
@@ -149,7 +149,7 @@ int AsynchReadStream::read( vector<uint8_t> &message,
 
 int AsynchReadStream::open( Handler &handler,
                             int handle,
-                            const void *completion_key,
+                            const void *completionKey,
                             Proactor *proactor )
 {
     cout << "AsynchReadStream::"
@@ -157,14 +157,14 @@ int AsynchReadStream::open( Handler &handler,
          << ": "
          << endl;
 
-    proactor_ = proactor;
-    handler_proxy_ = handler.proxy();
-    handle_ = handle;
+    mProactor = proactor;
+    mhandlerProxy = handler.proxy();
+    mHandle = handle;
     return 0;
 }
 
 Proactor *AsynchReadStream::proactor() const
 {
-    return proactor_;
+    return mProactor;
 }
 } // namespace Proactor_1_0

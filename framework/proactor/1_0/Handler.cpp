@@ -6,43 +6,43 @@ namespace Proactor_1_0
 {
 
 Handler::Handler()
-    : proactor_( 0 ), handle_( INVALID_HANDLE )
+    : mProactor( 0 ), mHandle( INVALID_HANDLE )
 {
     Handler::Proxy *p = new Handler::Proxy( this );
-    this->proxy_.reset( p );
+    this->mProxy.reset( p );
 }
 
 Handler::Handler( Proactor *d )
-    : proactor_( d ), handle_( INVALID_HANDLE )
+    : mProactor( d ), mHandle( INVALID_HANDLE )
 {
     Handler::Proxy *p = new Handler::Proxy( this );
-    this->proxy_.reset( p );
+    this->mProxy.reset( p );
 }
 
 Handler::~Handler()
 {
-    Handler::Proxy *p = this->proxy_.get();
+    Handler::Proxy *p = this->mProxy.get();
     if ( p )
         p->reset();
 }
 
 int Handler::handle()
 {
-    return handle_;
+    return mHandle;
 }
 
 Proactor *Handler::proactor()
 {
-    return this->proactor_;
+    return this->mProactor;
 }
 
 void Handler::proactor( Proactor *p )
 {
-    this->proactor_ = p;
+    this->mProactor = p;
 }
 
-Handler::Proxy_Ptr &Handler::proxy()
+Handler::ProxyPtr &Handler::proxy()
 {
-    return proxy_;
+    return mProxy;
 }
 } // namespace Proactor_1_0

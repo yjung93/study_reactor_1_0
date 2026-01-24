@@ -216,7 +216,7 @@ int Proactor::startAio( AsynchResult *result,
             cout << "Proactor::"
                  << __FUNCTION__
                  << ": "
-                 << "Invalid op code="
+                 << " Invalid op code="
                  << op
                  << endl;
     }
@@ -238,10 +238,12 @@ int Proactor::startAio( AsynchResult *result,
         case 0: // started OK
             mAiocbList[index] = result;
             returnValue = 0;
+            break;
 
         case 1: // OS AIO queue overflow
             mNumDeferredAiocb++;
             returnValue = 0;
+            break;
 
         default: // Invalid request, there is no point
             break; // to start it later
@@ -258,7 +260,7 @@ int Proactor::startAio( AsynchResult *result,
          << ": "
          << " slot="
          << slot
-         << " AiocbListCurSize"
+         << " AiocbListCurSize="
          << mAiocbListCurSize
          << " return value="
          << returnValue
@@ -304,7 +306,7 @@ int Proactor::startAioI( AsynchResult *result )
                  << __FUNCTION__
                  << ": "
                  << pPype
-                 << " errno"
+                 << " errno="
                  << errno
                  << " it will be deferred AIO"
                  << endl;
@@ -389,13 +391,13 @@ int Proactor::handleEvents()
 
     cout << "Proactor::"
          << __FUNCTION__
-         << ": mAiocbList.size()="
+         << ": mAiocbList.size="
          << mAiocbListMaxSize
          << endl;
 
     cout << "Proactor::"
          << __FUNCTION__
-         << ": activeList.size()="
+         << ": activeList.size="
          << activeList.size()
          << endl;
 
@@ -418,7 +420,7 @@ int Proactor::handleEvents()
             cout << "Proactor::"
                  << __FUNCTION__
                  << ": "
-                 << "aio_suspend Failed"
+                 << " aio_suspend Failed"
                  << endl;
         }
 
@@ -534,9 +536,7 @@ AsynchResult *Proactor::findCompletedAio( int &errorStatus,
     index++; // for next iteration
     count--; // for next iteration
 
-    //  start_deferred_aio();
-    //make attempt to start deferred AIO
-    //It is safe as we are protected by mutex_
+    startDeferredAio();
 
     return AsynchResult;
 }
@@ -589,11 +589,6 @@ int Proactor::getResultStatus( AsynchResult *asynchResult,
 
 int Proactor::startDeferredAio()
 {
-    cout << "Proactor::"
-         << __FUNCTION__
-         << ": "
-         << endl;
-
     // This protected method is called from
     // find_completed_aio after any AIO completion
     // We should call this method always with locked
@@ -603,7 +598,15 @@ int Proactor::startDeferredAio()
     // if such exists
 
     if ( mNumDeferredAiocb == 0 )
+    {
         return 0; //  nothing to do
+    }
+    cout << "Proactor::"
+         << __FUNCTION__
+         << ": "
+         << " NumDeferredAiocb="
+         << mNumDeferredAiocb
+         << endl;
 
     size_t i = 0;
 
@@ -622,6 +625,15 @@ int Proactor::startDeferredAio()
              << __FUNCTION__
              << ": "
              << "internal Proactor error 3\n"
+             << endl;
+
+        cout << "Proactor::"
+             << __FUNCTION__
+             << ": "
+             << " i="
+             << i
+             << ", mAiocbListMaxSize="
+             << mAiocbListMaxSize
              << endl;
     }
 
@@ -651,8 +663,8 @@ int Proactor::startDeferredAio()
 
     --mNumDeferredAiocb;
 
-    result->set_error( errno );
-    result->set_bytes_transferred( 0 );
+    result->setError( errno );
+    result->setBytesTransferred( 0 );
     putqResult( result ); // we are with locked mutex_ here !
 
     return -1;
@@ -666,7 +678,7 @@ int Proactor::putqResult( AsynchResult *result )
     if ( !result )
         return -1;
 
-    int sigNum = result->signal_number();
+    int sigNum = result->signalNumber();
     mResultQueue.push_back( result );
 
     (void) sigNum; // avoid unused variable
@@ -677,7 +689,7 @@ int Proactor::putqResult( AsynchResult *result )
 
 void Proactor::applicationSpecificCode( AsynchResult *asynchResult,
                                         size_t bytes_transferred,
-                                        const void * /* completion_key*/,
+                                        const void * /* completionKey*/,
                                         u_long error )
 {
     // ACE_SEH_TRY

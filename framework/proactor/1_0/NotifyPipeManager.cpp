@@ -36,7 +36,7 @@ NotifyPipeManager::~NotifyPipeManager()
 {
 }
 
-void NotifyPipeManager::handle_read_stream( const AsynchReadStreamResult &result )
+void NotifyPipeManager::handleReadStream( const AsynchReadStreamResult &result )
 {
     cout << "NotifyPipeManager::"
          << __FUNCTION__

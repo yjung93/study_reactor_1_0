@@ -30,7 +30,7 @@ class AsynchResult : public aiocb
    *
    * @note This is not implemented for POSIX4 platforms.
    */
-    const void *completion_key() const;
+    const void *completionKey() const;
 
     /// Error value if the operation fails.
     u_long error() const;
@@ -46,7 +46,7 @@ class AsynchResult : public aiocb
    *
    */
     u_long offset() const;
-    u_long offset_high() const;
+    u_long offsetHigh() const;
 
     /// Priority of the operation.
     int priority() const;
@@ -56,28 +56,28 @@ class AsynchResult : public aiocb
    * operation. <signal_number> ranges from SIGRTMIN to SIGRTMAX. By
    * default, SIGRTMIN is used to issue <aio_> calls.
    */
-    int signal_number() const;
+    int signalNumber() const;
 
     /// Post @c this to the Proactor.
-    int post_completion( Proactor *proactor );
+    int postCompletion( Proactor *proactor );
 
     /// Destructor.
     virtual ~AsynchResult();
 
     /// Simulate error value to use in the post_completion ()
-    void set_error( u_long errcode );
+    void setError( u_long errcode );
 
     /// Simulate value to use in the post_completion ()
-    void set_bytes_transferred( size_t nbytes );
+    void setBytesTransferred( size_t nbytes );
 
     virtual void complete( size_t bytes_transferred,
                            int success,
-                           const void *completion_key,
+                           const void *completionKey,
                            u_long error = 0 ) = 0;
 
   protected:
     /// Constructor. <Event> is not used on POSIX.
-    AsynchResult( const Handler::Proxy_Ptr &handler_proxy,
+    AsynchResult( const Handler::ProxyPtr &handler_proxy,
                   const void *act,
                   int event,
                   u_long offset,
@@ -87,7 +87,7 @@ class AsynchResult : public aiocb
 
 
     /// Handler that will be called back.
-    Handler::Proxy_Ptr handler_proxy_;
+    Handler::ProxyPtr mhandlerProxy;
 
     /**
    * ACT for this operation.
@@ -95,19 +95,19 @@ class AsynchResult : public aiocb
    * this. But it doesnot provide the constness, so this may be
    * better.
    */
-    const void *act_;
+    const void *mAct;
 
     /// Bytes transferred by this operation.
-    size_t bytes_transferred_;
+    size_t mBytesTransferred;
 
     /// Success indicator.
-    int success_;
+    int mSuccess;
 
     /// ACT associated with handle.
-    const void *completion_key_;
+    const void *mCompletionKey;
 
     /// Error if operation failed.
-    u_long error_;
+    u_long mError;
 };
 
 } // namespace Proactor_1_0

@@ -52,51 +52,7 @@ void ServerEventHandler::open( int new_handle )
     mReader.read( mMessageRead, mMessageRead.size() );
 }
 
-// int ServerEventHandler::handleInput( int fd )
-// {
-//     cout << "ServerEventHandler::"
-//          << __FUNCTION__
-//          << endl;
-
-//     const int bufferSize = 1024;
-
-//     char buffer[bufferSize] = { 0 };
-
-//     int valread = read( fd, buffer, bufferSize );
-//     if ( valread == 0 )
-//     {
-//         // Client disconnected
-//         cout << "Client disconnected, socket FD: "
-//              << fd
-//              << endl;
-
-//         close( fd );
-//         getReactor()->removeHandler( this, ALL_EVENTS_MASK );
-
-//         if ( mOwner != nullptr )
-//         {
-//             mOwner->removeConnection( fd );
-//         }
-//     }
-//     else
-//     {
-//         // Echo the message back to client
-//         cout << "Received message: "
-//              << buffer
-//              << endl;
-
-//         string messageToSend = "Echo - " + string( buffer );
-//         send( fd, messageToSend.c_str(), messageToSend.size(), 0 );
-
-//         cout << "Replied message: "
-//              << messageToSend
-//              << endl;
-//     }
-
-//     return 0;
-// }
-
-void ServerEventHandler::handle_read_stream( const Proactor_1_0::AsynchReadStreamResult &result )
+void ServerEventHandler::handleReadStream( const Proactor_1_0::AsynchReadStreamResult &result )
 {
     if ( result.success() != true || result.bytes_transferred() == 0 )
     {
@@ -113,8 +69,6 @@ void ServerEventHandler::handle_read_stream( const Proactor_1_0::AsynchReadStrea
              << endl;
 
         string messageToSend = "Echo - " + string( messageReceived );
-        send( result.aio_fildes, messageToSend.c_str(), messageToSend.size(), 0 );
-
         mMessageWrite.assign( messageToSend.begin(), messageToSend.end() );
         mWriter.write( mMessageWrite, mMessageWrite.size() );
 
@@ -126,7 +80,7 @@ void ServerEventHandler::handle_read_stream( const Proactor_1_0::AsynchReadStrea
     }
 }
 
-void ServerEventHandler::handle_write_stream( const Proactor_1_0::AsynchWriteStreamResult &result )
+void ServerEventHandler::handleWriteStream( const Proactor_1_0::AsynchWriteStreamResult &result )
 {
     if ( result.success() != true || result.bytes_transferred() == 0 )
     {

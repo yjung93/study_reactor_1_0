@@ -27,8 +27,8 @@ class ServerEventHandler : public Proactor_1_0::ServiceHandler
     ServerEventHandler( Acceptor &owner );
     ~ServerEventHandler();
     void open( int new_handle ) override;
-    void handle_read_stream( const Proactor_1_0::AsynchReadStreamResult &result ) override;
-    void handle_write_stream( const Proactor_1_0::AsynchWriteStreamResult &result ) override;
+    void handleReadStream( const Proactor_1_0::AsynchReadStreamResult &result ) override;
+    void handleWriteStream( const Proactor_1_0::AsynchWriteStreamResult &result ) override;
 
   private:
 

@@ -1,8 +1,11 @@
 #ifndef PROACTOR_1_0_ASYNC_WRITE_STREAM_HPP_
 #define PROACTOR_1_0_ASYNC_WRITE_STREAM_HPP_
 
+#include <vector>
+
 #include "AsynchResult.hpp"
-#include "AsynchOperation.hpp"
+#include "Proactor.hpp"
+#include "Handler.hpp"
 
 namespace Proactor_1_0
 {
@@ -10,10 +13,10 @@ namespace Proactor_1_0
 class AsynchWriteStreamResult : public AsynchResult
 {
   public:
-    AsynchWriteStreamResult( const Handler::Proxy_Ptr &handler_proxy,
+    AsynchWriteStreamResult( const Handler::ProxyPtr &handler_proxy,
                              int handle,
                              vector<uint8_t> &buffer,
-                             size_t bytes_to_read,
+                             size_t bytesToRead,
                              const void *act,
                              int event,
                              int priority,
@@ -31,13 +34,13 @@ class AsynchWriteStreamResult : public AsynchResult
     /// I/O handle used for reading.
     int handle() const;
 
-    void complete( size_t bytes_transferred, int success, const void *completion_key, u_long error = 0 ) override;
+    void complete( size_t bytes_transferred, int success, const void *completionKey, u_long error = 0 ) override;
 
   protected:
     vector<uint8_t> &mMessage;
 };
 
-class AsynchWriteStream //: public AsynchOperation
+class AsynchWriteStream
 {
   public:
     AsynchWriteStream();
@@ -45,7 +48,7 @@ class AsynchWriteStream //: public AsynchOperation
 
     int open( Handler &handler,
               int handle,
-              const void *completion_key,
+              const void *completionKey,
               Proactor *proactor = 0 );
 
     /// Check the documentation for ACE_Asynch_Operation::cancel.
@@ -64,13 +67,13 @@ class AsynchWriteStream //: public AsynchOperation
 
   private:
     /// Proactor that this Asynch IO will be registered with.
-    Proactor *proactor_;
+    Proactor *mProactor;
 
     /// Handler that will receive the callback.
-    Handler::Proxy_Ptr handler_proxy_;
+    Handler::ProxyPtr mhandlerProxy;
 
     /// I/O handle used for reading.
-    int handle_;
+    int mHandle;
 };
 } // namespace Proactor_1_0
 

@@ -17,7 +17,7 @@ class NotifyPipeManager : public Handler
     NotifyPipeManager( Proactor *proactor );
     ~NotifyPipeManager();
 
-    void handle_read_stream( const AsynchReadStreamResult &result ) override;
+    void handleReadStream( const AsynchReadStreamResult &result ) override;
     int notify();
 
   private:

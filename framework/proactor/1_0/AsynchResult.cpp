@@ -11,37 +11,37 @@ namespace Proactor_1_0
 
 size_t AsynchResult::bytes_transferred() const
 {
-    return this->bytes_transferred_;
+    return this->mBytesTransferred;
 }
 
-void AsynchResult::set_bytes_transferred( size_t nbytes )
+void AsynchResult::setBytesTransferred( size_t nbytes )
 {
-    this->bytes_transferred_ = nbytes;
+    this->mBytesTransferred = nbytes;
 }
 
 const void *AsynchResult::act() const
 {
-    return this->act_;
+    return this->mAct;
 }
 
 int AsynchResult::success() const
 {
-    return this->success_;
+    return this->mSuccess;
 }
 
-const void *AsynchResult::completion_key() const
+const void *AsynchResult::completionKey() const
 {
-    return this->completion_key_;
+    return this->mCompletionKey;
 }
 
 u_long AsynchResult::error() const
 {
-    return this->error_;
+    return this->mError;
 }
 
-void AsynchResult::set_error( u_long errcode )
+void AsynchResult::setError( u_long errcode )
 {
-    this->error_ = errcode;
+    this->mError = errcode;
 }
 
 int AsynchResult::event() const
@@ -54,7 +54,7 @@ u_long AsynchResult::offset() const
     return this->aio_offset;
 }
 
-u_long AsynchResult::offset_high() const
+u_long AsynchResult::offsetHigh() const
 {
     // errno = ENOTSUP;
     return 0;
@@ -65,12 +65,12 @@ int AsynchResult::priority() const
     return this->aio_reqprio;
 }
 
-int AsynchResult::signal_number() const
+int AsynchResult::signalNumber() const
 {
     return this->aio_sigevent.sigev_signo;
 }
 
-int AsynchResult::post_completion( Proactor *proactor )
+int AsynchResult::postCompletion( Proactor *proactor )
 {
     // Get to the platform specific implementation.
 
@@ -92,7 +92,7 @@ AsynchResult::~AsynchResult()
 {
 }
 
-AsynchResult::AsynchResult( const Handler::Proxy_Ptr &handler_proxy,
+AsynchResult::AsynchResult( const Handler::ProxyPtr &handler_proxy,
                             const void *act,
                             int /* event */, // Event is not used on POSIX.
                             u_long offset,
@@ -100,12 +100,12 @@ AsynchResult::AsynchResult( const Handler::Proxy_Ptr &handler_proxy,
                             int priority,
                             int signal_number )
 
-    : handler_proxy_( handler_proxy ),
-      act_( act ),
-      bytes_transferred_( 0 ),
-      success_( 0 ),
-      completion_key_( 0 ),
-      error_( 0 )
+    : mhandlerProxy( handler_proxy ),
+      mAct( act ),
+      mBytesTransferred( 0 ),
+      mSuccess( 0 ),
+      mCompletionKey( 0 ),
+      mError( 0 )
 {
     ::memset(static_cast<aiocb*>(this), 0, sizeof(aiocb));
 

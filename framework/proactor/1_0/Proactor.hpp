@@ -55,9 +55,9 @@ class Proactor
 
     int putqResult( AsynchResult *result );
 
-    void applicationSpecificCode( AsynchResult *asynch_result,
+    void applicationSpecificCode( AsynchResult *asynchResult,
                                   size_t bytes_transferred,
-                                  const void *completion_key,
+                                  const void *completionKey,
                                   u_long error );
 
     ssize_t allocateAioSlot( AsynchResult *result );

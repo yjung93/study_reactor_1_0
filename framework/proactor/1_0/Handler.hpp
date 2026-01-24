@@ -22,8 +22,8 @@ class Handler
     Handler( Proactor *p );
     virtual ~Handler();
 
-    virtual void handle_read_stream( const AsynchReadStreamResult &result ) {};
-    virtual void handle_write_stream( const AsynchWriteStreamResult &result ) {};
+    virtual void handleReadStream( const AsynchReadStreamResult &result ) {};
+    virtual void handleWriteStream( const AsynchWriteStreamResult &result ) {};
     int handle();
     Proactor *proactor();
     void proactor( Proactor *p );
@@ -31,22 +31,22 @@ class Handler
     class Proxy
     {
       public:
-        Proxy( Handler *handler ) : handler_( handler ) {}
-        void reset() { this->handler_ = 0; }
-        Handler *handler() { return this->handler_; }
+        Proxy( Handler *handler ) : mhandler( handler ) {}
+        void reset() { this->mhandler = 0; }
+        Handler *handler() { return this->mhandler; }
 
       private:
-        Handler *handler_;
+        Handler *mhandler;
     };
 
-    typedef shared_ptr<Proxy> Proxy_Ptr;
+    typedef shared_ptr<Proxy> ProxyPtr;
 
-    Proxy_Ptr &proxy();
+    ProxyPtr &proxy();
 
   protected:
-    Proactor *proactor_;
-    Proxy_Ptr proxy_;
-    int handle_;
+    Proactor *mProactor;
+    ProxyPtr mProxy;
+    int mHandle;
 };
 
 } // namespace Proactor_1_0

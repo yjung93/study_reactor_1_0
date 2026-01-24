@@ -3,10 +3,10 @@
 namespace Proactor_1_0
 {
 
-AsynchWriteStreamResult::AsynchWriteStreamResult( const Handler::Proxy_Ptr &handler_proxy,
+AsynchWriteStreamResult::AsynchWriteStreamResult( const Handler::ProxyPtr &handler_proxy,
                                                   int handle,
                                                   vector<uint8_t> &message,
-                                                  size_t bytes_to_read,
+                                                  size_t bytesToRead,
                                                   const void *act,
                                                   int event,
                                                   int priority,
@@ -70,12 +70,12 @@ int AsynchWriteStreamResult::handle() const
     return this->aio_fildes;
 }
 
-void AsynchWriteStreamResult::complete( size_t bytes_transferred, int success, const void *completion_key, u_long error )
+void AsynchWriteStreamResult::complete( size_t bytes_transferred, int success, const void *completionKey, u_long error )
 {
-    this->bytes_transferred_ = bytes_transferred;
-    this->success_ = success;
-    this->completion_key_ = completion_key;
-    this->error_ = error;
+    this->mBytesTransferred = bytes_transferred;
+    this->mSuccess = success;
+    this->mCompletionKey = completionKey;
+    this->mError = error;
 
     // <errno> is available in the aiocb.
     (void) error;
@@ -87,10 +87,10 @@ void AsynchWriteStreamResult::complete( size_t bytes_transferred, int success, c
     // ACE_Asynch_Read_Stream::Result result( this );
 
     // Call the application handler.
-    Handler *handler = this->handler_proxy_.get()->handler();
+    Handler *handler = this->mhandlerProxy.get()->handler();
     if ( handler != 0 )
     {
-        handler->handle_write_stream( *this );
+        handler->handleWriteStream( *this );
     }
 }
 
@@ -122,8 +122,8 @@ int AsynchWriteStream::write( vector<uint8_t> &message,
     // Create the Asynch_Result.
 
     Proactor *proactor = this->proactor();
-    AsynchWriteStreamResult *result = new AsynchWriteStreamResult( this->handler_proxy_,
-                                                                   this->handle_,
+    AsynchWriteStreamResult *result = new AsynchWriteStreamResult( this->mhandlerProxy,
+                                                                   this->mHandle,
                                                                    message,
                                                                    bytes_to_write,
                                                                    act,
@@ -150,7 +150,7 @@ int AsynchWriteStream::write( vector<uint8_t> &message,
 
 int AsynchWriteStream::open( Handler &handler,
                              int handle,
-                             const void *completion_key,
+                             const void *completionKey,
                              Proactor *proactor )
 {
     cout << "AsynchWriteStream::"
@@ -158,14 +158,14 @@ int AsynchWriteStream::open( Handler &handler,
          << ": "
          << endl;
 
-    proactor_ = proactor;
-    handler_proxy_ = handler.proxy();
-    handle_ = handle;
+    mProactor = proactor;
+    mhandlerProxy = handler.proxy();
+    mHandle = handle;
     return 0;
 }
 
 Proactor *AsynchWriteStream::proactor() const
 {
-    return proactor_;
+    return mProactor;
 }
 } // namespace Proactor_1_0
