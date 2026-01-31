@@ -29,11 +29,6 @@ int AsynchResult::success() const
     return this->mSuccess;
 }
 
-const void *AsynchResult::completionKey() const
-{
-    return this->mCompletionKey;
-}
-
 u_long AsynchResult::error() const
 {
     return this->mError;
@@ -94,7 +89,6 @@ AsynchResult::~AsynchResult()
 
 AsynchResult::AsynchResult( const Handler::ProxyPtr &handler_proxy,
                             const void *act,
-                            int /* event */, // Event is not used on POSIX.
                             u_long offset,
                             u_long offset_high,
                             int priority,
@@ -104,7 +98,6 @@ AsynchResult::AsynchResult( const Handler::ProxyPtr &handler_proxy,
       mAct( act ),
       mBytesTransferred( 0 ),
       mSuccess( 0 ),
-      mCompletionKey( 0 ),
       mError( 0 )
 {
     ::memset(static_cast<aiocb*>(this), 0, sizeof(aiocb));

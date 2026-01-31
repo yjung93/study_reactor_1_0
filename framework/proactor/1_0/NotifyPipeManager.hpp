@@ -30,4 +30,4 @@ class NotifyPipeManager : public Handler
 };
 
 } // namespace Proactor_1_0
-#endif //
+#endif // PROACTOR_1_0_NOTIFY_PIPE_MANAGER_HPP_

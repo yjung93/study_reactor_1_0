@@ -18,7 +18,6 @@ class AsynchReadStreamResult : public AsynchResult
                             vector<uint8_t> &buffer,
                             size_t bytesToRead,
                             const void *act,
-                            int event,
                             int priority,
                             int signal_number );
 
@@ -34,7 +33,7 @@ class AsynchReadStreamResult : public AsynchResult
     /// I/O handle used for reading.
     int handle() const;
 
-    void complete( size_t bytes_transferred, int success, const void *completionKey, u_long error = 0 ) override;
+    void complete( size_t bytes_transferred, int success, u_long error = 0 ) override;
 
   protected:
     vector<uint8_t> &mMessage;

@@ -697,7 +697,6 @@ void Proactor::applicationSpecificCode( AsynchResult *asynchResult,
         // Call completion hook
         asynchResult->complete( bytes_transferred,
                                 error ? 0 : 1,
-                                0, // No completion key.
                                 error );
     }
     // ACE_SEH_FINALLY

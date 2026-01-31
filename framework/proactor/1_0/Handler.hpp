@@ -1,13 +1,13 @@
 #ifndef PROACTOR_1_0_HANDLER_HPP_
 #define PROACTOR_1_0_HANDLER_HPP_
 #include <memory>
-// #include "AsynchReadStream.hpp"
+
 using namespace std;
 
 namespace Proactor_1_0
 {
 
-// class AsynchReadStream;
+
 class AsynchWriteStream;
 class Proactor;
 class AsynchReadStream;

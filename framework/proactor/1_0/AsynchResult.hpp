@@ -24,14 +24,6 @@ class AsynchResult : public aiocb
     /// Did the operation succeed?
     int success() const;
 
-    /**
-   * This is the ACT associated with the handle on which the
-   * Asynch_Operation takes place.
-   *
-   * @note This is not implemented for POSIX4 platforms.
-   */
-    const void *completionKey() const;
-
     /// Error value if the operation fails.
     u_long error() const;
 
@@ -72,14 +64,11 @@ class AsynchResult : public aiocb
 
     virtual void complete( size_t bytes_transferred,
                            int success,
-                           const void *completionKey,
                            u_long error = 0 ) = 0;
 
   protected:
-    /// Constructor. <Event> is not used on POSIX.
     AsynchResult( const Handler::ProxyPtr &handler_proxy,
                   const void *act,
-                  int event,
                   u_long offset,
                   u_long offset_high,
                   int priority,
@@ -102,9 +91,6 @@ class AsynchResult : public aiocb
 
     /// Success indicator.
     int mSuccess;
-
-    /// ACT associated with handle.
-    const void *mCompletionKey;
 
     /// Error if operation failed.
     u_long mError;

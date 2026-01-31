@@ -8,12 +8,10 @@ AsynchReadStreamResult::AsynchReadStreamResult( const Handler::ProxyPtr &handler
                                                 vector<uint8_t> &message,
                                                 size_t bytesToRead,
                                                 const void *act,
-                                                int event,
                                                 int priority,
                                                 int signal_number )
     : AsynchResult( handler_proxy,
                     act,
-                    event,
                     0,
                     0,
                     priority,
@@ -70,11 +68,10 @@ int AsynchReadStreamResult::handle() const
     return this->aio_fildes;
 }
 
-void AsynchReadStreamResult::complete( size_t bytes_transferred, int success, const void *completionKey, u_long error )
+void AsynchReadStreamResult::complete( size_t bytes_transferred, int success, u_long error )
 {
     this->mBytesTransferred = bytes_transferred;
     this->mSuccess = success;
-    this->mCompletionKey = completionKey;
     this->mError = error;
 
     // <errno> is available in the aiocb.
@@ -126,7 +123,6 @@ int AsynchReadStream::read( vector<uint8_t> &message,
                                                                  message,
                                                                  bytesToRead,
                                                                  act,
-                                                                 proactor->get_handle(),
                                                                  priority,
                                                                  signal_number );
 

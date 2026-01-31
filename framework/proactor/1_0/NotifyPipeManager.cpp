@@ -52,8 +52,7 @@ int NotifyPipeManager::notify()
          << ": "
          << endl;
 
-    // string messageToSend = "1";
-    // ::send( mNotifyPipe[1], messageToSend.c_str(), messageToSend.size(), 0 );
+
     char byte = 1;
     ::write( mNotifyPipe[1], &byte, 1 );
     return 0;
