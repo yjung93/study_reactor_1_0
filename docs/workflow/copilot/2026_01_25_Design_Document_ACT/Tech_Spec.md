@@ -11,8 +11,8 @@
 
 ## 2. Goals & Non-Goals
 - **Goals:**
-  - Document the Asynchronous Completion Toke design pattern implementation.
-  - Describe the example application, which is implemented based on Proactive framework, from the "Asynchronous Completion Toke" design point of view. 
+  - Document the Asynchronous Completion Token design pattern implementation.
+  - Describe the example application, which is implemented based on Proactive framework, from the "Asynchronous Completion Token" design point of view. 
   - Provide an overview of the architectural layout, including:
     - Class diagrams
     - Flow sequences
@@ -23,7 +23,7 @@
 
 ## 3. Context and Background
 - To deepen knowledge of design patterns, I am implementing a simplified version of a framework and an example application to demonstrate the implemented framework.
-- The part of the framework applying the Proactor pattern and Asynchronous Completion Toke" pattern and the example application for demonstration have been implemented.
+- The part of the framework applying the Proactor pattern and Asynchronous Completion Token" pattern and the example application for demonstration have been implemented.
 - It is required to create a design document for the implemented framework and example application.
 - The design document will be used as a reference for writing technical blog posts, such as:
     - https://yjung93.github.io/design%20pattern%20-%20ace%20framework/post-active-object/
